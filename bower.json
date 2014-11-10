@@ -1,0 +1,36 @@
+{
+  "name": "Journey",
+  "version": "0.1.0",
+  "dependencies": {
+    "everfi-sdk": "1.0.0"
+  },
+  "overrides": {
+    "json2": {
+      "main": "json2.js"
+    },
+    "everfi-sdk": {
+      "main": [
+        "public/index.html",
+        "public/javascripts/everfi-sdk.js",
+        "public/javascripts/ef.js",
+        "public/stylesheets/everfi-sdk.css",
+        "public/images/icons.png"
+      ]
+    },
+    "backbone": {
+      "dependencies": {
+        "lodash": "*",
+        "jquery": "*"
+      }
+    },
+    "font-awesome": {
+        "main": ["fonts", "css"]
+    },
+    "mediaelement": {
+      "main": [
+        "build/mediaelement-and-player.js",
+        "build/mediaelementplayer.css"
+      ]
+    }
+  }
+}

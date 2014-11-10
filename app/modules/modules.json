@@ -1,0 +1,51 @@
+[
+	{
+		"key": "sdk-module-1",
+		"title": "Sample Module 1",
+		"index": 1,
+		"activities": [
+			{
+				"key": "activity-1",
+				"index": 1,
+				"pages": [
+					{
+						"key": "page-1",
+						"type": "text",
+						"index": 1
+					},
+					{
+						"key": "page-2",
+						"type": "text",
+						"index": 2
+					}
+
+				]
+			}
+		]
+	},
+	
+	{
+		"key": "sdk-module-2",
+		"title": "Sample Module 2",
+		"index": 2,
+		"activities": [
+			{
+				"key": "activity-1",
+				"index": 1,
+				"pages": [
+					{
+						"key": "page-1",
+						"type": "text",
+						"index": 1
+					},
+					{
+						"key": "page-2",
+						"type": "text",
+						"index": 2
+					}
+
+				]
+			}
+		]
+	}
+]

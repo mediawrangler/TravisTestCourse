@@ -1,0 +1,46 @@
+{
+  "sdk-module-1": {
+    "activity-1": {
+      "page-1": {
+        "type": "text",
+        "content": {
+          "en" : {
+            "div1": "This is a div that I dumped on the page to hold some content.",
+            "links": []
+          }
+        }
+      },
+
+      "page-2": {
+        "completeOnVisit": true,
+        "type": "text",
+        "content": {
+          "en" : {
+            "div1": "this is page 2. it is the best page in the world.",
+            "links": [
+              { "text": "bracket", "path": "app_home/bracket/index", "id": "bracket" },
+              { "text": "next game", "path": "resume", "id": "nextgame" }
+            ]
+          }
+        }
+      },
+
+      "page-3": {
+        "type": "text",
+        "content": {
+          "en" : {
+            "div1": "This is page 3. It is the best page in the world.",
+            "links": [
+              { "text": "bracket", "path": "app_home/bracket/index", "id": "bracket" },
+              { "text": "next game", "path": "resume", "id": "nextgame" }
+            ]
+          }
+        }
+      }
+
+    },
+
+    "activity-2": {}
+  }
+}
+
