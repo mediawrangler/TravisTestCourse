@@ -1,6 +1,6 @@
 # EverFi SDK Skeleton
 
-![bwc-logo](http://brunch.io/images/svg/brunch.svg)
+![bwc-logo](/readme_files/everfi-skeletor.jpg?raw=true)
 
 This is HTML5 application, built with
 [EverFi-SDK](http://everfi.com/sdk), 
