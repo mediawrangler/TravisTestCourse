@@ -23,14 +23,19 @@
         "jquery": "*"
       }
     },
+    "bootstrap":{
+      "dependencies": {
+        "jquery-ui": "*"
+      }
+    },
     "font-awesome": {
         "main": ["fonts", "css"]
     },
-    "mediaelement": {
-      "main": [
-        "build/mediaelement-and-player.js",
-        "build/mediaelementplayer.css"
-      ]
+    "bootstrap-accessibility-plugin": {
+      "main": "plugins/js/bootstrap-accessibility-fn.js"
+    },
+    "soundmanager2": {
+      "main": "script/soundmanager2.js"
     }
   }
 }
