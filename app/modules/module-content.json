@@ -5,8 +5,10 @@
         "type": "text",
         "content": {
           "en" : {
-            "div1": "This is a div that I dumped on the page to hold some content.",
-            "links": []
+            "headers": {
+              "h1": ["Module 1 Activity 1 Page 1!"],
+              "h2": ["1234 yay"]
+            }
           }
         }
       },
@@ -16,7 +18,9 @@
         "type": "text",
         "content": {
           "en" : {
-            "div1": "this is page 2. it is the best page in the world.",
+            "headers": {
+              "h1": ["Module 1 Activity 1 Page 2 BROHAM!"]
+            },
             "links": [
               { "text": "bracket", "path": "app_home/bracket/index", "id": "bracket" },
               { "text": "next game", "path": "resume", "id": "nextgame" }
@@ -29,7 +33,9 @@
         "type": "text",
         "content": {
           "en" : {
-            "div1": "This is page 3. It is the best page in the world.",
+            "headers": {            
+              "h1": ["Module 1 Activity 1 Page 3 BROHAM!"]
+              },
             "links": [
               { "text": "bracket", "path": "app_home/bracket/index", "id": "bracket" },
               { "text": "next game", "path": "resume", "id": "nextgame" }
@@ -40,7 +46,81 @@
 
     },
 
-    "activity-2": {}
+    "activity-2": {
+        "page-1": {
+        "type": "text",
+        "content": {
+          "en" : {
+            "headers": {            
+              "h1": ["Module 1 Activity 2 Page 1"]
+            },
+            "links": []
+          }
+        }
+      },
+
+      "page-2": {
+        "completeOnVisit": true,
+        "type": "text",
+        "content": {
+          "en" : {
+            "headers": {            
+              "h1": ["Module 1 Activity 2 Page 2"]
+            },
+            "links": [
+              { "text": "bracket", "path": "app_home/bracket/index", "id": "bracket" },
+              { "text": "next game", "path": "resume", "id": "nextgame" }
+            ]
+          }
+        }
+      },
+
+      "page-3": {
+        "type": "text",
+        "content": {
+          "en" : {
+            "headers": {
+              "h1": ["Module 1 Activity 2 Page 3!"]  
+            },
+            "links": [
+              { "text": "bracket", "path": "app_home/bracket/index", "id": "bracket" },
+              { "text": "next game", "path": "resume", "id": "nextgame" }
+            ]
+          }
+        }
+      }
+    }
+  },
+
+  "sdk-module-2": {
+    "activity-1": {
+      "page-1": {
+        "type": "text",
+        "content": {
+          "en" : {
+            "headers": {
+              "h1": ["Module 2 Activity 1 Page 1 Bro!"]
+            },
+            "links": []
+          }
+        }
+      },
+
+      "page-2": {
+        "completeOnVisit": true,
+        "type": "text",
+        "content": {
+          "en" : {
+            "headers": {
+              "h1": ["Module 2 Activity 1 Page 2 BROHAM!"]
+            },
+            "links": [
+              { "text": "bracket", "path": "app_home/bracket/index", "id": "bracket" },
+              { "text": "next game", "path": "resume", "id": "nextgame" }
+            ]
+          }
+        }
+      }
+    }
   }
 }
-

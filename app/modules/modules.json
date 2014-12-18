@@ -17,10 +17,39 @@
 						"key": "page-2",
 						"type": "text",
 						"index": 2
+					},
+					{
+						"key": "page-3",
+						"type": "text",
+						"index": 3
 					}
 
+
 				]
-			}
+			},
+			{
+				"key": "activity-2",
+				"index": 1,
+				"pages": [
+					{
+						"key": "page-1",
+						"type": "text",
+						"index": 1
+					},
+					{
+						"key": "page-2",
+						"type": "text",
+						"index": 2
+					},
+					{
+						"key": "page-3",
+						"type": "text",
+						"index": 3
+					}
+
+
+				]
+			}			
 		]
 	},
 	
