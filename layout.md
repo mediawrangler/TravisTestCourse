@@ -4,12 +4,10 @@ app/config.json # Course Configuration Options
 
 app/modules/modules.json
 app/modules/module-1/module.json # Module configuration
-app/modules/module-1/activity-1/activity.json # Activity Level configuration (needed?)
-app/modules/module-1/activity-1/page-1/page.json # Page configuration
-app/modules/module-1/activity-1/page-1/page-content.json # Page content
+app/modules/module-1/activity-1/page-1/content.json # Page content
 app/modules/module-1/activity-1/page-1/styles/page-1.css
 app/modules/module-1/activity-1/page-1/assets/images/page-1.png # Assets get copied wholesale
-app/modules/module-1/activity-1/page-1/js/page_1.png # animation JS
+app/modules/module-1/activity-1/page-1/js/page_1.js # animation JS
 
 app/menu/config # needed?
 app/menu/stylesheets/menu.css
