@@ -128,8 +128,8 @@ gulp.task('serve', function() {
 
 gulp.task('default', ['everfi-sdk', 'vendor', 'locales', 'json', 'assets', 'scripts', 'styles', 'serve'], function(){
    gulp.watch(["app/**/*.scss", "app/**/*.css"], ['styles']);
+   gulp.watch(["app/**/images/*"], ['assets']);
    gulp.watch(["app/**/*.js"], ['scripts']);
-   gulp.wathc(["**/assets/**/*", "**/images/**/*"], ['assets']);
    gulp.watch(["app/**/content.json"], ['json']);
    gulp.watch(["app/**/i18n.json"], ['locales']);
 });
