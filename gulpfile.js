@@ -235,8 +235,10 @@ gulp.task('styles', function() {
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('public/stylesheets/'))
     .pipe(reload({stream:true}));
+  var fonts = gulp.src('app/assets/stylesheets/fonts/**', {'base': 'app/assets/stylesheets/fonts'})
+    .pipe(gulp.dest('public/fonts/'));
 
-  merge(modules, global);
+  merge(modules, modules, fonts);
 });
 
 gulp.task('everfi-sdk', function() {
