@@ -9,6 +9,7 @@ var extend       = require('gulp-extend');
 var wrap         = require('gulp-wrap');
 var glob         = require('glob');
 var fs           = require('fs');
+var gulpIf       = require('gulp-if');
 var mainBower    = require('main-bower-files');
 var sass         = require('gulp-ruby-sass');
 var handlebars   = require('gulp-handlebars');
@@ -206,10 +207,11 @@ gulp.task('scripts', function() {
 });
 
 gulp.task('json', function() {
+  // workaround for gulp-extend bug and an array
   var module  = gulp.src('app/modules/**/module.json')
-    .pipe(extend('modules.json'))
+    .pipe(concat('modules.json', {newLine: ','}))   
+    .pipe(wrap('[<%= contents %>]'))
     .pipe(gulp.dest('public/content/'));
-  
   var content = gulp.src('app/modules/**/content.json')
     .pipe(extend('module-content.json'))
     .pipe(gulp.dest('public/content'));
@@ -227,6 +229,7 @@ gulp.task('styles', function() {
       config_file: './config/compass.rb',
       css: 'stylesheets',
       sass: 'app/styles',
+      debug: true,
       images: 'images'
     }))
     .pipe(concat('app.css'))
@@ -318,7 +321,7 @@ gulp.task('serve', function() {
   });
 });
 gulp.task('default', ['everfi-sdk', 'vendor', 'locales', 'json', 'assets', 'scripts', 'styles', 'serve'], function(){
-   gulp.watch(["app/**/*.scss", "app/**/*.css"], ['styles']);
+   gulp.watch(["app/**/*.scss"], ['styles']);
    gulp.watch(["app/**/images/*"], ['assets']);
    gulp.watch(["app/**/*.js", "app/**/*.hbs"], ['scripts']);
    gulp.watch(["app/**/content.json", "app/**/module.json"], ['json']);
