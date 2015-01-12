@@ -229,7 +229,6 @@ gulp.task('styles', function() {
       config_file: './config/compass.rb',
       css: 'stylesheets',
       sass: 'app/styles',
-      debug: true,
       images: 'images'
     }))
     .pipe(concat('app.css'))
