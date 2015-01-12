@@ -11,7 +11,6 @@ var glob         = require('glob');
 var fs           = require('fs');
 var mainBower    = require('main-bower-files');
 var sass         = require('gulp-ruby-sass');
-var gulpIf       = require('gulp-if');
 var handlebars   = require('gulp-handlebars');
 var defineModule = require('gulp-define-module');
 var prompt       = require('gulp-prompt');
@@ -19,18 +18,73 @@ var prompt       = require('gulp-prompt');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 
-// get an array of folders following a pattern from glob search
-function getFolderNamesFromSyncGlob(src, pattern) {
-  return glob.sync(src)
+// build a unique list of active languages from sync glob
+function getLanguagesfromFilesSync() {
+  return glob.sync('app/modules/**/locales/*.json')
     .map(function(file) {
-      return new RegExp(pattern + '\/([^\/]+)\/.*?$').exec(file)[1];
+      return /.*?\/locales\/(\w+)\.json$/.exec(file)[1];
     })
     .filter(function(value, index, self) {
       return self.indexOf(value) === index;
     });
 };
 
-// scaffoldding activity with pages structure
+// build an object of the skeleton module.json for scaffolding
+function skeletonModuleJSON(res, index) {
+  var mj    = [{
+    key:      res.title.toLowerCase().replace(/\s/g, '-'),
+    title:    res.title,
+    unlocked: res.unlocked,
+    description: res.description,
+    index:    index,
+    id:       res.title.toLowerCase().replace(/\s/g, '_'),
+    activities: [{}]
+  }];
+  return mj;
+};
+// build an object of the skeleton content.json for scaffolding
+function skeletonCustomScript(res, page) {
+  var dcj          = {},
+      moduleJSON   = dcj[res.module]            = {};
+      activityJSON = moduleJSON[res.activity]   = {};
+      pageJSON     = activityJSON['page-'+page] = {};
+      blocksJSON   = pageJSON['blocks']         = [];
+  return dcj;
+};
+
+// build skeleton page-level SCSS for scaffolding
+function skeletonPageLevelSCSS(res, page) {
+  return "." + res.module + ".page-" + page + " {\n  //write your scss here\n}";
+};
+
+
+// scaffoldding module with automated module.json extensions
+gulp.task('module', function() {
+  gulp.src('.')
+    .pipe(prompt.prompt([{
+      type: 'input',
+      name: 'title',
+      message: 'Module name:'
+    }, {
+      type: 'input',
+      name: 'description',
+      message: 'Module description:'
+    }, {
+      type: 'input',
+      name: 'unlocked',
+      message: 'Unlocked (y/n):'      
+    }], function(res) {
+      var key   = res.title.toLowerCase().replace(/\s/g, '-'),
+          index = glob.sync('app/modules/**/module.json').length; 
+      if (!fs.existsSync('./app/modules/' + key)) {
+        fs.mkdirSync('./app/modules/' + key);
+      }
+      res.unlocked = (res.unlocked === 'y') ? 'true' : 'false';
+      fs.writeFileSync('./app/modules/' + key +'/module.json', JSON.stringify(skeletonModuleJSON(res, ++index), null, 2));
+    }));
+})
+
+// scaffoldding activity with pages structure and module.json
 gulp.task('activity', function() {
   gulp.src('.')
     .pipe(prompt.prompt([{
@@ -46,23 +100,38 @@ gulp.task('activity', function() {
       name: 'pages',
       message: 'Number of pages:'
     }], function(res) {
-      var activity = './app/modules/' + res.module + '/' + res.activity;
+      var module   =  res.module.toLowerCase().replace(/\s/g, '-');
+      var activity = './app/modules/' + module + '/' + res.activity;
       if (!fs.existsSync(activity)) {
         fs.mkdirSync(activity);
-        fs.writeFileSync(activity + '/module.json');
       }
+      var pageDir,
+          moduleJSON   = JSON.parse(fs.readFileSync('./app/modules/' + module + '/module.json')),
+          index        = glob.sync('app/modules/'+ module + '/*-activity*').length;
+          activityJSON = moduleJSON[0].activities[index-1] = {};
+          pagesJSON    = activityJSON.pages = [];
+      activityJSON.title = res.activity.replace(/-/g, ' ');
+      activityJSON.key   = res.activity;
+
       for(var page = 1; page <= res.pages; page++) {
-        var pageDir = activity + '/page-' + page;
+        var contentJSON = skeletonCustomScript(res, page),
+            pageSCSS    = skeletonPageLevelSCSS(res, page);
+        pagesJSON[page-1] = {
+          key: 'page-'+ page, 
+          index: page-1,
+          script: true
+        };
+        pageDir = activity + '/page-' + page;
         fs.mkdirSync(pageDir);
         fs.mkdirSync(pageDir + '/images');
         fs.mkdirSync(pageDir + '/locales');
-        fs.mkdirSync(pageDir + '/locales/en');
         fs.mkdirSync(pageDir + '/templates');
-        fs.writeFileSync(pageDir + '/locales/en/i18n.json', '');
-        fs.writeFileSync(pageDir + '/_page-' + page + '.scss', '');
+        fs.writeFileSync(pageDir + '/locales/en.json', "{\n\n}");
+        fs.writeFileSync(pageDir + '/_page-' + page + '.scss', pageSCSS);
         fs.writeFileSync(pageDir + '/page-' + page + '.js', '');
-        fs.writeFileSync(pageDir + '/content.json', '');
+        fs.writeFileSync(pageDir + '/content.json', JSON.stringify(contentJSON, null, 2));
       }
+      fs.writeFileSync('./app/modules/' + module +'/module.json', JSON.stringify(moduleJSON, null, 2));
     }));
 })
 
@@ -77,27 +146,39 @@ gulp.task('page', function() {
       type: 'input',
       name: 'activity',
       message: 'Activity name:'
-    }, {
-      type: 'input',
-      name: 'page',
-      message: 'Page number:'
     }], function(res) {
-        var page    = res.page;
-        var pageDir = ['./app/modules/', 
-          res.module, 
-          '/',
-          res.activity,
-          '/page-' + page
-        ].join('');
-        fs.mkdirSync(pageDir);
-        fs.mkdirSync(pageDir + '/images');
-        fs.mkdirSync(pageDir + '/locales');
-        fs.mkdirSync(pageDir + '/locales/en');
-        fs.mkdirSync(pageDir + '/templates');
-        fs.writeFileSync(pageDir + '/locales/en/i18n.json', '');
-        fs.writeFileSync(pageDir + '/_page-' + page + '.scss', '');
-        fs.writeFileSync(pageDir + '/page-' + page + '.js', '');
-        fs.writeFileSync(pageDir + '/content.json', '');
+    var module  =  res.module.toLowerCase().replace(/\s/g, '-'),
+        moduleJSON = JSON.parse(fs.readFileSync('./app/modules/' + module + '/module.json')),
+        page      = glob.sync('app/modules/'+module+'/'+res.activity+ '/' + 'page-*').length + 1,
+        index;
+        moduleJSON[0].activities.forEach(function(e, i) {
+          if (e.key === res.activity) {
+            index = i;
+          }
+        });
+        var pagesJSON = moduleJSON[0].activities[index].pages,       
+        pageDir   = ['./app/modules/', 
+        module, 
+        '/',
+        res.activity,
+        '/page-' + page
+      ].join('');
+    var contentJSON = skeletonCustomScript(res, page),
+        pageSCSS    = skeletonPageLevelSCSS(res, page);
+    fs.mkdirSync(pageDir);
+    fs.mkdirSync(pageDir + '/images');
+    fs.mkdirSync(pageDir + '/locales');
+    fs.mkdirSync(pageDir + '/templates');
+    fs.writeFileSync(pageDir + '/locales/en.json', "{\n\n}");
+    fs.writeFileSync(pageDir + '/_page-' + page + '.scss', pageSCSS);
+    fs.writeFileSync(pageDir + '/page-' + page + '.js', '');
+    fs.writeFileSync(pageDir + '/content.json', JSON.stringify(contentJSON, null, 2));
+    pagesJSON[page-1] = {
+      key: 'page-' + page,
+      index: page - 1,
+      script: true
+    };
+    fs.writeFileSync('./app/modules/' + module +'/module.json', JSON.stringify(moduleJSON, null, 2));
   }));
 });
 
@@ -109,7 +190,6 @@ gulp.task('scripts', function() {
     .pipe(sourcemaps.init())
     .pipe(hbsFilter)
     .pipe(handlebars())
-    //.pipe(wrap('Handlebars.template(<%= contents %>)'))
     .pipe(defineModule('commonjs'))
     .pipe(hbsFilter.restore())
     .pipe(gulpIf(/\.js$/, commonjsWrap({
@@ -120,7 +200,7 @@ gulp.task('scripts', function() {
       }
     })))
     .pipe(concat('app.js'))
-   // .pipe(sourcemaps.write())
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest('public/javascripts/'))
     .pipe(reload({stream:true}));
 });
@@ -208,11 +288,11 @@ gulp.task('vendor', function() {
 });
 
 gulp.task('locales', function() {
-  var languages = getFolderNamesFromSyncGlob('app/modules/**/locales/*/*.json', '.*?\/locales');
+  var languages = getLanguagesfromFilesSync('app/modules/**/locales/*/*.json', '.*?\/locales');
   var locales   = languages.map(function(lang) {
-      return gulp.src('app/modules/**/'+lang+'/*.json')
-        .pipe(extend('i18n.json'))
-        .pipe(gulp.dest('public/content/locales/'+lang));
+      return gulp.src('app/modules/**/locales/'+lang+'.json')
+        .pipe(extend(lang + '.json'))
+        .pipe(gulp.dest('public/content/locales/'));
     });
 
     merge.apply(null, locales);
@@ -242,5 +322,5 @@ gulp.task('default', ['everfi-sdk', 'vendor', 'locales', 'json', 'assets', 'scri
    gulp.watch(["app/**/images/*"], ['assets']);
    gulp.watch(["app/**/*.js", "app/**/*.hbs"], ['scripts']);
    gulp.watch(["app/**/content.json", "app/**/module.json"], ['json']);
-   gulp.watch(["app/**/i18n.json"], ['locales']);
+   gulp.watch(["app/**/locales/*.json"], ['locales']);
 });
