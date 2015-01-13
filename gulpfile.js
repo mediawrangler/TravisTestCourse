@@ -220,27 +220,27 @@ gulp.task('json', function() {
   merge(module, content); 
 });
 
-gulp.task('styles', function() {  
-  var modules =  gulp.src(['app/modules/**/*.scss'])
+gulp.task('pre-styles', function() {
+  return  gulp.src(['app/modules/**/*.scss'])
     .pipe(concat('_pages.scss'))
-    .pipe(gulp.dest('app/styles'));
+    .pipe(gulp.dest('app/styles'));  
+});
+
+gulp.task('styles', ['pre-styles'], function() {  
   var global = gulp.src(['app/styles/**/*.scss'])
-    .pipe(sourcemaps.init())
     .pipe(compass({
       config_file: './config/compass.rb',
       css: 'public/stylesheets',
       sass: 'app/styles',
-      images: 'app/assets/images',
+      logging: false,
+      sourcemap: true,
       generated_images_dir: 'public/images'
     }))
-    .pipe(concat('app.css'))
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest('public/stylesheets/'))
     .pipe(reload({stream:true}));
   var fonts = gulp.src('app/assets/stylesheets/fonts/**', {'base': 'app/assets/stylesheets/fonts'})
     .pipe(gulp.dest('public/fonts/'));
 
-  merge(modules, global, fonts);
+  merge(global, fonts);
 });
 
 gulp.task('everfi-sdk', function() {
@@ -334,6 +334,7 @@ gulp.task('serve', function() {
 gulp.task('default', ['everfi-sdk', 'vendor', 'locales', 'json', 'assets', 'scripts', 'styles', 'serve'], function(){
    gulp.watch(["app/**/*.scss"], ['styles']);
    gulp.watch(["app/**/images/*"], ['assets']);
+   gulp.watch(['bower_components/everfi-sdk/public/*'], ['everfi-sdk'])
    gulp.watch(["app/**/*.js", "app/**/*.hbs"], ['scripts']);
    gulp.watch(["app/**/content.json", "app/**/module.json"], ['json']);
    gulp.watch(["app/**/locales/*.json"], ['locales']);
