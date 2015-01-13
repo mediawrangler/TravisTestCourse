@@ -43,6 +43,7 @@ function skeletonModuleJSON(res, index) {
   }];
   return mj;
 };
+
 // build an object of the skeleton content.json for scaffolding
 function skeletonCustomScript(res, page) {
   var dcj          = {},
@@ -157,7 +158,7 @@ gulp.task('page', function() {
             index = i;
           }
         });
-        var pagesJSON = moduleJSON[0].activities[index].pages,       
+    var pagesJSON = moduleJSON[0].activities[index].pages,       
         pageDir   = ['./app/modules/', 
         module, 
         '/',
@@ -227,9 +228,10 @@ gulp.task('styles', function() {
     .pipe(sourcemaps.init())
     .pipe(compass({
       config_file: './config/compass.rb',
-      css: 'stylesheets',
+      css: 'public/stylesheets',
       sass: 'app/styles',
-      images: 'images'
+      images: 'app/assets/images',
+      generated_images_dir: 'public/images'
     }))
     .pipe(concat('app.css'))
     .pipe(sourcemaps.write())
@@ -238,7 +240,7 @@ gulp.task('styles', function() {
   var fonts = gulp.src('app/assets/stylesheets/fonts/**', {'base': 'app/assets/stylesheets/fonts'})
     .pipe(gulp.dest('public/fonts/'));
 
-  merge(modules, modules, fonts);
+  merge(modules, global, fonts);
 });
 
 gulp.task('everfi-sdk', function() {
@@ -303,12 +305,20 @@ gulp.task('locales', function() {
 });
 
 gulp.task('assets', function() {
-  var assets = gulp.src('**/assets/**/*')
-  //.pipe(gulpIf(/.*?\.png$/, optipng()))
-  .pipe(gulp.dest('public/'));
-  var moduleImages = gulp.src('app/modules/**/images/*')
-    .pipe(gulp.dest('public/images'));
-  merge(assets, moduleImages);
+  var assets = gulp.src('app/assets/images/**/*', {base: 'app/assets'})
+    .pipe(gulp.dest('public/'));
+
+  var moduleImages = glob.sync('app/modules/**/images/*')
+    .map(function(file) {
+      var location = file.split(require('path').sep).slice(2,5);
+      var page     = 'app/modules/' + location.join('/');
+      return gulp.src(page + '/images/*', {base: page + '/images'})
+        .pipe(gulp.dest('public/images/structure/'+location[0]));
+    });
+
+    merge.apply(
+      Array.prototype.concat.call(assets, moduleImages)
+    );
 });
 
 
