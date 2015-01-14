@@ -232,6 +232,8 @@ gulp.task('styles', ['pre-styles'], function() {
       config_file: './config/compass.rb',
       css: 'public/stylesheets',
       sass: 'app/styles',
+      images: 'app/assets/images',
+      generated_images_path: 'public/images',
       logging: false,
       sourcemap: true,
       generated_images_dir: 'public/images'
