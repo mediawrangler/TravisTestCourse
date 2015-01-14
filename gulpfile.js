@@ -32,7 +32,7 @@ function getLanguagesfromFilesSync() {
 
 // build an object of the skeleton module.json for scaffolding
 function skeletonModuleJSON(res, index) {
-  var mj    = [{
+  var mj    = {
     key:      res.title.toLowerCase().replace(/\s/g, '-'),
     title:    res.title,
     unlocked: res.unlocked,
@@ -40,7 +40,7 @@ function skeletonModuleJSON(res, index) {
     index:    index,
     id:       res.title.toLowerCase().replace(/\s/g, '_'),
     activities: [{}]
-  }];
+  };
   return mj;
 };
 
@@ -110,7 +110,7 @@ gulp.task('activity', function() {
       var pageDir,
           moduleJSON   = JSON.parse(fs.readFileSync('./app/modules/' + module + '/module.json')),
           index        = glob.sync('app/modules/'+ module + '/*-activity*').length;
-          activityJSON = moduleJSON[0].activities[index-1] = {};
+          activityJSON = moduleJSON.activities[index-1] = {};
           pagesJSON    = activityJSON.pages = [];
       activityJSON.title = res.activity.replace(/-/g, ' ');
       activityJSON.key   = res.activity;
@@ -153,12 +153,12 @@ gulp.task('page', function() {
         moduleJSON = JSON.parse(fs.readFileSync('./app/modules/' + module + '/module.json')),
         page      = glob.sync('app/modules/'+module+'/'+res.activity+ '/' + 'page-*').length + 1,
         index;
-        moduleJSON[0].activities.forEach(function(e, i) {
+        moduleJSON.activities.forEach(function(e, i) {
           if (e.key === res.activity) {
             index = i;
           }
         });
-    var pagesJSON = moduleJSON[0].activities[index].pages,       
+    var pagesJSON = moduleJSON.activities[index].pages,       
         pageDir   = ['./app/modules/', 
         module, 
         '/',
