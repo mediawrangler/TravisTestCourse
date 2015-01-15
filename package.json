@@ -15,23 +15,26 @@
   "dependencies": {
     "after-brunch": "0.0.4",
     "auto-reload-brunch": ">= 1.0 < 1.8",
+    "browser-sync": "^1.7.2",
     "clean-css-brunch": ">= 1.0 < 1.8",
     "css-brunch": ">= 1.0 < 1.8",
+    "gulp": "^3.8.10",
+    "gulp-concat": "^2.4.2",
+    "gulp-filter": "^1.0.2",
+    "gulp-notify": "^2.1.0",
+    "gulp-ruby-sass": "^0.7.1",
+    "gulp-sass": "^1.2.4",
+    "gulp-sourcemaps": "^1.2.8",
+    "gulp-wrap-commonjs": "^0.1.12",
     "handlebars-brunch": ">= 1.0 < 1.8",
     "javascript-brunch": ">= 1.0 < 1.8",
+    "main-bower-files": "^2.4.1",
+    "merge-stream": "^0.1.6",
+    "sass-brunch": "^1.8.8",
     "stylus-brunch": ">= 1.0 < 1.8",
     "uglify-js-brunch": ">= 1.0 < 1.8"
   },
   "devDependencies": {
-    "browser-sync": "^1.7.2",
-    "gulp": "^3.8.10",
-    "gulp-concat": "^2.4.2",
-    "gulp-filter": "^1.0.2",
-    "gulp-ruby-sass": "^0.7.1",
-    "gulp-sourcemaps": "^1.2.8",
-    "gulp-wrap-commonjs": "^0.1.12",
-    "main-bower-files": "^2.4.1",
-    "merge-stream": "^0.1.6",
     "glob": "^4.3.2",
     "gulp-compass": "^2.0.3",
     "gulp-compile-handlebars": "^0.4.4",
@@ -43,6 +46,7 @@
     "gulp-prompt": "^0.1.1",
     "gulp-wrap": "^0.5.0",
     "handlebars": "^2.0.0",
-    "map-stream": "0.0.5"
+    "map-stream": "0.0.5",
+    "run-sequence": "^1.0.2"
   }
 }

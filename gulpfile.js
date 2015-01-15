@@ -9,6 +9,7 @@ var extend       = require('gulp-extend');
 var wrap         = require('gulp-wrap');
 var glob         = require('glob');
 var fs           = require('fs');
+var runSequence  = require('run-sequence');
 var gulpIf       = require('gulp-if');
 var mainBower    = require('main-bower-files');
 var sass         = require('gulp-ruby-sass');
@@ -54,15 +55,30 @@ function skeletonCustomScript(res, page) {
   return dcj;
 };
 
+// build an object of the skeleton lang.json for scaffolding
+function skeletonLocaleJSON(res, page) {
+  var dcj          = {},
+      moduleJSON   = dcj[res.module]            = {};
+      activityJSON = moduleJSON[res.activity]   = {};
+      pageJSON     = activityJSON['page-'+page] = {};
+  return dcj;
+};
+
 // build skeleton page-level SCSS for scaffolding
 function skeletonPageLevelSCSS(res, page) {
   return "." + res.module + ".page-" + page + " {\n  //write your scss here\n}";
 };
 
+// scaffold a module with a full activity and automated module.json
+gulp.task('module', function(callback) {
+  runSequence('empty-module',
+      'activity',
+      callback);
+});
 
-// scaffoldding module with automated module.json extensions
-gulp.task('module', function() {
-  gulp.src('.')
+// scaffoldding empty module with automated module.json extensions
+gulp.task('empty-module', function() {
+  return gulp.src('.')
     .pipe(prompt.prompt([{
       type: 'input',
       name: 'title',
@@ -84,11 +100,11 @@ gulp.task('module', function() {
       res.unlocked = (res.unlocked === 'y') ? 'true' : 'false';
       fs.writeFileSync('./app/modules/' + key +'/module.json', JSON.stringify(skeletonModuleJSON(res, ++index), null, 2));
     }));
-})
+});
 
 // scaffoldding activity with pages structure and module.json
 gulp.task('activity', function() {
-  gulp.src('.')
+  return gulp.src('.')
     .pipe(prompt.prompt([{
       type: 'input',
       name: 'module',
@@ -117,6 +133,7 @@ gulp.task('activity', function() {
 
       for(var page = 1; page <= res.pages; page++) {
         var contentJSON = skeletonCustomScript(res, page),
+            localesJSON = skeletonLocaleJSON(res, page),
             pageSCSS    = skeletonPageLevelSCSS(res, page);
         pagesJSON[page-1] = {
           key: 'page-'+ page, 
@@ -128,13 +145,14 @@ gulp.task('activity', function() {
         fs.mkdirSync(pageDir + '/images');
         fs.mkdirSync(pageDir + '/locales');
         fs.mkdirSync(pageDir + '/templates');
-        fs.writeFileSync(pageDir + '/locales/en.json', "{\n\n}");
+        fs.writeFileSync(pageDir + '/locales/en.json', JSON.stringify(localesJSON, null, 2));
         fs.writeFileSync(pageDir + '/_page-' + page + '.scss', pageSCSS);
         fs.writeFileSync(pageDir + '/page-' + page + '.js', '');
         fs.writeFileSync(pageDir + '/content.json', JSON.stringify(contentJSON, null, 2));
       }
       fs.writeFileSync('./app/modules/' + module +'/module.json', JSON.stringify(moduleJSON, null, 2));
     }));
+    callback();
 })
 
 // scaffolding page structure
@@ -166,6 +184,7 @@ gulp.task('page', function() {
         '/page-' + page
       ].join('');
     var contentJSON = skeletonCustomScript(res, page),
+        localesJSON = skeletonLocaleJSON(res, page),
         pageSCSS    = skeletonPageLevelSCSS(res, page);
     fs.mkdirSync(pageDir);
     fs.mkdirSync(pageDir + '/images');
