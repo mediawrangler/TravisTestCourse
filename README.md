@@ -4,24 +4,49 @@
 
 This is HTML5 application, built with
 [EverFi-SDK](http://everfi.com/sdk), 
-[Brunch](http://brunch.io) and [Chaplin](http://chaplinjs.org).
+[Gulp](http://gulpjs.com/) and [Chaplin](http://chaplinjs.org).
 
-## Installation
-Clone this repo manually with git or use `brunch new http://github.com/everfi/everfi-sdk-skeleton`
+Commands for installing on Mac OSX
+---
+* install ruby
+    * `brew install ruby`
+* install compass
+    * `sudo gem install compass`
+* install node/npm - npm install
+    * `brew install node`
+* install global bower
+    * `npm install -g bower`
+* install gulp
+    * `npm install -g gulp`
 
-## Getting started
-* Install (if you don't have them):
-    * [Node.js](http://nodejs.org): `brew install node` on OS X
-    * [Brunch](http://brunch.io): `npm install -g brunch`
-    * [Bower](http://bower.io): `npm install -g bower`
-    * Brunch plugins and Bower dependencies: `npm install & bower install`
-* Run:
-    * `brunch watch --server` — watches the project with continuous rebuild. This will also launch HTTP server with [pushState](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history).
-    * `brunch build --production` — builds minified project for production
-* Learn:
-    * `public/` dir is fully auto-generated and served by HTTP server.  Write your code in `app/` dir.
-    * Place static files you want to be copied from `app/assets/` to `public/`.
-    * [Brunch site](http://brunch.io), [Chaplin site](http://chaplinjs.org)
+Commands for installing on Ubuntu
+---
+* install ruby
+    * `sudo apt-get install ruby`
+    * `sudo apt-get install ruby-dev` (if issues with building native extensions)
+* install compass
+    * `sudo gem install compass`
+* install node/npm - npm install
+    * `sudo apt-get install node npm`
+* may need to deal with a pathing issue on linux:
+    * `sudo ln -s /usr/bin/nodejs /usr/bin/node`
+* install global bower
+    * `sudo npm install -g bower`
+* install gulp
+    * `sudo npm install -g gulp`
 
----------------
+Getting Dependencies:
+---
+ * `npm install` 
+ * `bower install`
+  
+
+Getting Started
+---
+* Run `gulp` to start a server with a continuous build process
+* Run `gulp build` to build the production assets and application to `public/`
+
+  
+* More Information: [Here](http://everfi.github.io/ContentPartnerAPI/process/build-process.html)
+
 
