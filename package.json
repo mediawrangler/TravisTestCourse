@@ -9,8 +9,7 @@
     "url": ""
   },
   "scripts": {
-    "start": "brunch watch --server",
-    "test": "brunch test"
+    "start": "gulp"
   },
   "dependencies": {
     "after-brunch": "0.0.4",
@@ -44,9 +43,14 @@
     "gulp-if": "^1.2.5",
     "gulp-optipng": "0.0.2",
     "gulp-prompt": "^0.1.1",
+    "gulp-shell": "^0.3.0",
+    "gulp-util": "^3.0.4",
     "gulp-wrap": "^0.5.0",
+    "gulp-yaml": "^0.2.3",
     "handlebars": "^2.0.0",
+    "js-yaml": "^3.2.7",
     "map-stream": "0.0.5",
-    "run-sequence": "^1.0.2"
+    "merge2": "^0.3.1",
+    "yamljs": "^0.2.1"
   }
 }

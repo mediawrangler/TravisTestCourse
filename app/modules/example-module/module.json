@@ -1,0 +1,31 @@
+{
+  "key": "example-module",
+  "title": "Example module",
+  "unlocked": "true",
+  "description": "Example",
+  "index": 1,
+  "id": "example_module",
+  "activities": [
+    {
+      "pages": [
+        {
+          "key": "page-1",
+          "index": 0,
+          "script": true
+        },
+        {
+          "key": "page-2",
+          "index": 1,
+          "script": true
+        },
+        {
+          "key": "page-3",
+          "index": 2,
+          "script": true
+        }
+      ],
+      "title": "example module activity",
+      "key": "example-module-activity"
+    }
+  ]
+}
