@@ -45,6 +45,7 @@ Getting Started
 ---
 * Run `gulp` to start a server with a continuous build process
 * Run `gulp build` to build the production assets and application to `public/`
+* Run `gulp module` to scaffold a new module and begin
 
   
 * More Information: [Here](http://everfi.github.io/ContentPartnerAPI/process/build-process.html)
