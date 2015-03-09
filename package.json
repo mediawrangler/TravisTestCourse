@@ -1,7 +1,8 @@
 {
-  "author": "EverFi",
-  "name": "Transit",
-  "version": "2.0.0",
+  "author": "Your Name",
+  "name": "example-app",
+  "description": "Package description",
+  "version": "0.0.1",
   "homepage": "",
   "repository": {
     "type": "git",
