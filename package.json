@@ -1,8 +1,7 @@
 {
-  "author": "Your Name",
-  "name": "example-app",
-  "description": "Package description",
-  "version": "0.0.1",
+  "author": "EverFi",
+  "name": "Transit",
+  "version": "2.0.0",
   "homepage": "",
   "repository": {
     "type": "git",
@@ -12,11 +11,7 @@
     "start": "gulp"
   },
   "dependencies": {
-    "after-brunch": "0.0.4",
-    "auto-reload-brunch": ">= 1.0 < 1.8",
     "browser-sync": "^1.7.2",
-    "clean-css-brunch": ">= 1.0 < 1.8",
-    "css-brunch": ">= 1.0 < 1.8",
     "gulp": "^3.8.10",
     "gulp-concat": "^2.4.2",
     "gulp-filter": "^1.0.2",
@@ -25,13 +20,8 @@
     "gulp-sass": "^1.2.4",
     "gulp-sourcemaps": "^1.2.8",
     "gulp-wrap-commonjs": "^0.1.12",
-    "handlebars-brunch": ">= 1.0 < 1.8",
-    "javascript-brunch": ">= 1.0 < 1.8",
     "main-bower-files": "^2.4.1",
-    "merge-stream": "^0.1.6",
-    "sass-brunch": "^1.8.8",
-    "stylus-brunch": ">= 1.0 < 1.8",
-    "uglify-js-brunch": ">= 1.0 < 1.8"
+    "merge-stream": "^0.1.6"
   },
   "devDependencies": {
     "glob": "^4.3.2",
