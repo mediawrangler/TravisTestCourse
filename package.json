@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "glob": "^4.3.2",
+    "gulp-changed": "^1.2.1",
     "gulp-compass": "^2.0.3",
     "gulp-compile-handlebars": "^0.4.4",
     "gulp-define-module": "^0.1.1",

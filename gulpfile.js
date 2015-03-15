@@ -17,6 +17,7 @@ var handlebars   = require('gulp-handlebars');
 var defineModule = require('gulp-define-module');
 var prompt       = require('gulp-prompt');
 var map          = require('map-stream');
+var changed      = require('gulp-changed');
 
 var shell = require('gulp-shell');
 var gutil = require("gulp-util");
@@ -30,28 +31,28 @@ var reload = browserSync.reload;
  */
 
 var DEPLOY_CURRICULUM = require('./package').name,
-    DEPLOY_VERSION    = require('./package').version
-      .replace(/\./g, '_'),
-    DEPLOY_BUCKET     = ['everfi-curriculums/curriculums/',
-      DEPLOY_CURRICULUM,
-      '/',
-      DEPLOY_VERSION
-    ].join('');
+  DEPLOY_VERSION    = require('./package').version
+    .replace(/\./g, '_'),
+  DEPLOY_BUCKET     = ['everfi-curriculums/curriculums/',
+    DEPLOY_CURRICULUM,
+    '/',
+    DEPLOY_VERSION
+  ].join('');
 
 /**
  * Functions
-*/
+ */
 
 // build a unique list of active languages from sync glob
 function getLanguagesfromFilesSync() {
-  return glob.sync('app/modules/**/locales/*.json')
+  return glob.sync('app/**/locales/*.json')
     .map(function(file) {
-      return /.*?\/locales\/(\w+)\.json$/.exec(file)[1];
+      return /.*?\/locales\/([a-zA-Z_-]+)\.json$/.exec(file)[1];
     })
     .filter(function(value, index, self) {
       return self.indexOf(value) === index;
     });
-};
+}
 
 // build an object of the skeleton module.json for scaffolding
 function skeletonModuleJSON(res, index) {
@@ -65,48 +66,48 @@ function skeletonModuleJSON(res, index) {
     activities: [{}]
   };
   return mj;
-};
+}
 
 // build an object of the skeleton content.json for scaffolding
 function skeletonCustomContent(res, page) {
   var dcj          = {},
-      moduleJSON   = dcj[res.module]            = {};
-      activityJSON = moduleJSON[res.activity]   = {};
-      pageJSON     = activityJSON['page-'+page] = {};
-      blocksJSON   = pageJSON['blocks']         = [];
+    moduleJSON   = dcj[res.module]            = {},
+    activityJSON = moduleJSON[res.activity]   = {},
+    pageJSON     = activityJSON['page-'+page] = {},
+    blocksJSON   = pageJSON['blocks']         = [];
   return dcj;
-};
+}
 
 // build an object of the skeleton lang.json for scaffolding
 function skeletonLocaleJSON(res, page) {
   var dcj          = {},
-      moduleJSON   = dcj[res.module]            = {};
-      activityJSON = moduleJSON[res.activity]   = {};
-      pageJSON     = activityJSON['page-'+page] = {};
+    moduleJSON   = dcj[res.module]            = {},
+    activityJSON = moduleJSON[res.activity]   = {},
+    pageJSON     = activityJSON['page-'+page] = {};
   return dcj;
-};
+}
 
 // build skeleton content.yml for scaffolding
 function skeletonContentYML() {
   var newline = "\n",
-      tab     = '  ';
+    tab     = '  ';
   return ['- type: text', newline,
     tab, 'items: ', newline,
     tab, tab, '- description: empty',
     newline
   ].join("");
-};
+}
 
 // build skeleton page-level SCSS for scaffolding
 function skeletonPageLevelSCSS(res, page) {
   return "." + res.module + ".page-" + page + " {\n  //write your scss here\n}";
-};
+}
 
 // build custom load skeleton script for scaffolding
 function skeletonCustomScript(page) {
   var newline = "\n",
-      tab     = '  ';
-  return ["var BaseExtension = require('javascripts/base-extension');", newline,
+    tab     = '  ';
+  return ["var BaseExtension = require('base-extension');", newline,
     "var animations = require('animations');", newline,
     newline,
     "var page", page, " = _.defaults({", newline,
@@ -136,14 +137,14 @@ function skeletonCustomScript(page) {
     newline,
     "module.exports = page", page, ";"
   ].join("");
-};
+}
 
 /**
  * Scaffold Tasks
  */
 
 // scaffold a module with a full activity and automated module.json
-gulp.task('module', function(callback) {
+gulp.task('module', function() {
   return gulp.src('.')
     .pipe(prompt.prompt([{
       type: 'input',
@@ -156,15 +157,15 @@ gulp.task('module', function(callback) {
     }, {
       type: 'input',
       name: 'unlocked',
-      message: 'Unlocked (y/n):'      
+      message: 'Unlocked (y/n):'
     }, {
       type: 'input',
       name: 'pages',
-      message: 'Number of pages:'      
+      message: 'Number of pages:'
     }], function(res) {
 
       var key   = res.title.toLowerCase().replace(/\s/g, '-'),
-          index = glob.sync('app/modules/**/module.json').length; 
+        index = glob.sync('app/modules/**/module.json').length;
       if (!fs.existsSync('./app/modules/' + key)) {
         fs.mkdirSync('./app/modules/' + key);
       }
@@ -176,22 +177,22 @@ gulp.task('module', function(callback) {
       if (!fs.existsSync(activity)) {
         fs.mkdirSync(activity);
       }
+      index = glob.sync('app/modules/'+ module + '/*-activity*').length;
       var pageDir,
-          moduleJSON   = JSON.parse(fs.readFileSync('./app/modules/' + module + '/module.json')),
-          index        = glob.sync('app/modules/'+ module + '/*-activity*').length;
-          activityJSON = moduleJSON.activities[index-1] = {};
-          pagesJSON    = activityJSON.pages = [];
+        moduleJSON   = JSON.parse(fs.readFileSync('./app/modules/' + module + '/module.json')),
+        activityJSON = moduleJSON.activities[index-1] = {},
+        pagesJSON    = activityJSON.pages = [];
       activityJSON.title = res.activity.replace(/-/g, ' ');
       activityJSON.key   = res.activity;
 
       for(var page = 1; page <= res.pages; page++) {
         var localesJSON = skeletonLocaleJSON(res, page),
-            pageSCSS    = skeletonPageLevelSCSS(res, page),
-            scriptJS    = skeletonCustomScript(page),
-            contentYML  = skeletonContentYML();
+          pageSCSS    = skeletonPageLevelSCSS(res, page),
+          scriptJS    = skeletonCustomScript(page),
+          contentYML  = skeletonContentYML();
 
         pagesJSON[page-1] = {
-          key: 'page-'+ page, 
+          key: 'page-'+ page,
           index: page-1,
           script: true
         };
@@ -209,7 +210,7 @@ gulp.task('module', function(callback) {
     }));
 });
 
-// scaffoldding empty module with automated module.json extensions
+// scaffolding empty module with automated module.json extensions
 gulp.task('empty-module', function() {
   gulp.src('.')
     .pipe(prompt.prompt([{
@@ -223,10 +224,10 @@ gulp.task('empty-module', function() {
     }, {
       type: 'input',
       name: 'unlocked',
-      message: 'Unlocked (y/n):'      
+      message: 'Unlocked (y/n):'
     }], function(res) {
       var key   = res.title.toLowerCase().replace(/\s/g, '-'),
-          index = glob.sync('app/modules/**/module.json').length; 
+        index = glob.sync('app/modules/**/module.json').length;
       if (!fs.existsSync('./app/modules/' + key)) {
         fs.mkdirSync('./app/modules/' + key);
       }
@@ -235,7 +236,7 @@ gulp.task('empty-module', function() {
     }));
 });
 
-// scaffoldding activity with pages structure and module.json
+// scaffolding activity with pages structure and module.json
 gulp.task('activity', function() {
   gulp.src('.')
     .pipe(prompt.prompt([{
@@ -257,21 +258,21 @@ gulp.task('activity', function() {
         fs.mkdirSync(activity);
       }
       var pageDir,
-          moduleJSON   = JSON.parse(fs.readFileSync('./app/modules/' + module + '/module.json')),
-          index        = glob.sync('app/modules/'+ module + '/*-activity*').length;
-          activityJSON = moduleJSON.activities[index-1] = {};
-          pagesJSON    = activityJSON.pages = [];
+        moduleJSON   = JSON.parse(fs.readFileSync('./app/modules/' + module + '/module.json')),
+        index        = glob.sync('app/modules/'+ module + '/*-activity*').length,
+        activityJSON = moduleJSON.activities[index-1] = {},
+        pagesJSON    = activityJSON.pages = [];
       activityJSON.title = res.activity.replace(/-/g, ' ');
       activityJSON.key   = res.activity;
 
       for(var page = 1; page <= res.pages; page++) {
         var localesJSON = skeletonLocaleJSON(res, page),
-            pageSCSS    = skeletonPageLevelSCSS(res, page),
-            scriptJS    = skeletonCustomScript(page),
-            contentYML  = skeletonContentYML();
+          pageSCSS    = skeletonPageLevelSCSS(res, page),
+          scriptJS    = skeletonCustomScript(page),
+          contentYML  = skeletonContentYML();
 
         pagesJSON[page-1] = {
-          key: 'page-'+ page, 
+          key: 'page-'+ page,
           index: page-1,
           script: true
         };
@@ -287,7 +288,7 @@ gulp.task('activity', function() {
       }
       fs.writeFileSync('./app/modules/' + module +'/module.json', JSON.stringify(moduleJSON, null, 2));
     }));
-})
+});
 
 // scaffolding page structure
 gulp.task('page', function() {
@@ -301,263 +302,334 @@ gulp.task('page', function() {
       name: 'activity',
       message: 'Activity name:'
     }], function(res) {
-    var module  =  res.module.toLowerCase().replace(/\s/g, '-'),
+      var module  =  res.module.toLowerCase().replace(/\s/g, '-'),
         moduleJSON = JSON.parse(fs.readFileSync('./app/modules/' + module + '/module.json')),
         page      = glob.sync('app/modules/'+module+'/'+res.activity+ '/' + 'page-*').length + 1,
         index;
-        moduleJSON.activities.forEach(function(e, i) {
-          if (e.key === res.activity) {
-            index = i;
-          }
-        });
-    var pagesJSON = moduleJSON.activities[index].pages,       
-        pageDir   = ['./app/modules/', 
-        module, 
-        '/',
-        res.activity,
-        '/page-' + page
-      ].join('');
-    var localesJSON = skeletonLocaleJSON(res, page),
+      moduleJSON.activities.forEach(function(e, i) {
+        if (e.key === res.activity) {
+          index = i;
+        }
+      });
+      var pagesJSON = moduleJSON.activities[index].pages,
+        pageDir   = ['./app/modules/',
+          module,
+          '/',
+          res.activity,
+          '/page-' + page
+        ].join('');
+      var localesJSON = skeletonLocaleJSON(res, page),
         pageSCSS    = skeletonPageLevelSCSS(res, page),
         scriptJS    = skeletonCustomScript(page),
         contentYML  = skeletonContentYML();
-    fs.mkdirSync(pageDir);
-    fs.mkdirSync(pageDir + '/images');
-    fs.mkdirSync(pageDir + '/locales');
-    fs.mkdirSync(pageDir + '/templates');
-    fs.writeFileSync(pageDir + '/locales/en.json', JSON.stringify(localesJSON, null, 2));
-    fs.writeFileSync(pageDir + '/_page-' + page + '.scss', pageSCSS);
-    fs.writeFileSync(pageDir + '/page-' + page + '.js', scriptJS);
-    fs.writeFileSync(pageDir + '/content.yml', contentYML);
-    pagesJSON[page-1] = {
-      key: 'page-' + page,
-      index: page - 1,
-      script: true
-    };
-    fs.writeFileSync('./app/modules/' + module +'/module.json', JSON.stringify(moduleJSON, null, 2));
-  }));
+      fs.mkdirSync(pageDir);
+      fs.mkdirSync(pageDir + '/images');
+      fs.mkdirSync(pageDir + '/locales');
+      fs.mkdirSync(pageDir + '/templates');
+      fs.writeFileSync(pageDir + '/locales/en.json', JSON.stringify(localesJSON, null, 2));
+      fs.writeFileSync(pageDir + '/_page-' + page + '.scss', pageSCSS);
+      fs.writeFileSync(pageDir + '/page-' + page + '.js', scriptJS);
+      fs.writeFileSync(pageDir + '/content.yml', contentYML);
+      pagesJSON[page-1] = {
+        key: 'page-' + page,
+        index: page - 1,
+        script: true
+      };
+      fs.writeFileSync('./app/modules/' + module +'/module.json', JSON.stringify(moduleJSON, null, 2));
+    }));
 });
 
 /**
  * Build Tasks
+ desired compiled structure:
+ -public
+ --assets
+ ---javascripts
+ ---images
+ ---stylesheets
+ ----fonts
+ --content
+ --index.html
  */
 
-gulp.task('scripts', function() {
-  var hbsFilter = filter('**/*.hbs'),
-      jsFilter  = filter('**/*.js');
-  gulp.src(['app/**/*.js', 'app/**/*.hbs'])
-    .pipe(sourcemaps.init())
-    .pipe(hbsFilter)
-    .pipe(handlebars())
-    .pipe(map(function(data, callback){
-      data.defineModuleOptions.require = null;
-      callback(null, data);
-    }))
-    .pipe(defineModule('commonjs'))
-    .pipe(hbsFilter.restore())
-    .pipe(gulpIf(/\.js$/, commonjsWrap({
-      pathModifier: function(path) {
-        return path
-          .replace(/^.*?\/app\//, '')
-          .replace(/\.js$/, '');
-      }
-    })))
-    .pipe(concat('app.js'))
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest('public/javascripts/'))
-    .pipe(reload({stream:true}));
-});
-
-gulp.task('json', function() {
-  var module  = gulp.src('app/modules/**/module.json')
-    .pipe(concat('modules.json', {newLine: ','}))   
-    .pipe(wrap('[<%= contents %>]'))
-    .pipe(gulp.dest('public/content/'));
-
-  var content = gulp.src('app/modules/**/content.*')
-  .pipe(map(function(file, cb) {
-    if (file.isNull()) return cb(null, file); // pass along
-    if (file.isStream()) return cb(new Error("Streaming not supported"));
-    if (file.path.indexOf('.yml') === -1) return cb(null, file);
-    var json;
-    var index    = file.path.indexOf('app/modules')
-    var location = file.path.slice(index).split(require('path').sep).slice(2,5);
-    var obj      = {},
-        module   = obj[location[0]]      = {},
-        activity = module[location[1]]   = {},
-        page     = activity[location[2]] = {},
-        blocks   = page['blocks']        = '<%= contents %>';
-    try {
-    json = yaml.load(String(file.contents.toString('utf8')));
-    } catch(e) {
-    console.log(e);
-    console.log(json);
-    }
-    file.path = gutil.replaceExtension(file.path, '.json');
-    file.contents = new Buffer(JSON.stringify(obj)
-      .replace('"<%= contents %>"', '<%= contents %>')
-      .replace('<%= contents %>', JSON.stringify(json)));
-    cb(null,file);
-      }))
-      .pipe(extend('module-content.json'))
-      .pipe(gulp.dest('public/content'))
-      .pipe(reload({stream:true}));
-
-    merge.apply(null, 
-      Array.prototype.concat.call(module, content)
-    );
-});
-
-gulp.task('pre-styles', function() {
-  return  gulp.src(['app/modules/**/*.scss'])
-    .pipe(concat('_pages.scss'))
-    .pipe(gulp.dest('app/styles'));  
-});
-
-gulp.task('styles', function() {
-  var compassOpts ={
-    config_file: './config/compass.rb',
-    css: 'public/stylesheets',
-    sass: 'app/styles',
-    images: 'app/assets/images',
-    generated_images_path: 'public/images',
-    logging: false,
-    sourcemap: true,
-    generated_images_dir: 'public/images'
-  };
-  if(process.argv[3] === '--debug'){
-    compassOpts.debug = true;
-    compassOpts.logging = true;
-  }
-  var global = gulp.src(['app/styles/**/*.scss'])
-    .pipe(sourcemaps.init())
-    .pipe(compass(compassOpts))
-    .pipe(sourcemaps.write())
-    .pipe(reload({stream:true}));
-  var fonts = gulp.src('app/assets/stylesheets/fonts/**', {'base': 'app/assets/stylesheets/fonts'})
-    .pipe(gulp.dest('public/fonts/'));
-
-  merge(global, fonts);
-});
-
-gulp.task('all-styles', ['pre-styles', 'styles']);
-
+/**
+ * libraries, scripts, json
+ - everfi-sdk
+ - copy js files to public/assets/javascripts/
+ - copy css files to public/assets/stylesheets/
+ - copy index.html to public/
+ - vendor
+ - compile bower js files into public/assets/javascripts/vendor.js with commonjs first
+ - compile bower css files into public/assets/stylesheets/vendor.css
+ - scripts
+ - compile app js and hbs files into public/assets/javascripts/app.js, wrapping them as commonjs modules
+ - json
+ - compile all module.json files into public/content/module.json
+ - compile all content.json files into public/content/module-content.json
+ - copy app/course-settings.json to public/content/course-settings.json
+ - locales
+ - compile all locale files into a single file per language in public/content/locales
+ **/
 gulp.task('everfi-sdk', function() {
   var ef_sdk_js = gulp.src(mainBower({
     filter: function (file) {
       return (file.match(/js\.map$/) || file.match(/js$/)) && file.match(/everfi-sdk/);
     }
   }))
-    .pipe(gulp.dest('public/javascripts'));
+    .pipe(changed('public/assets/javascripts'))
+    .pipe(gulp.dest('public/assets/javascripts'));
 
   var ef_sdk_css = gulp.src(mainBower({
     filter: function (file) {
       return (file.match(/css\.map$/) || file.match(/css$/)) && file.match(/everfi-sdk/);
     }
   }))
-    .pipe(gulp.dest('public/stylesheets'));
+    .pipe(changed('public/assets/stylesheets'))
+    .pipe(gulp.dest('public/assets/stylesheets'));
 
   var ef_sdk_index = gulp.src(mainBower({
     filter: function (file) {
       return file.match(/index\.html$/) && file.match(/everfi-sdk/);
     }
   }))
+    .pipe(changed('public'))
     .pipe(gulp.dest('public'));
 
-  merge(ef_sdk_js, ef_sdk_css, ef_sdk_index);
+  return merge(ef_sdk_js, ef_sdk_css, ef_sdk_index);
 });
 
-
 gulp.task('vendor', function() {
-  var hbsFilter = filter('**/*/handlebars.js');
-  var scripts = gulp.src(['bower_components/**/commonjs-require.js', 'vendor/**/handlebars.js'].concat(mainBower({
-      filter: function(file){
-        // Want the JS files that are everfi-sdk files
-        return file.match(/.*?\.js$/) && !file.match(/everfi-sdk/) && !file.match(/.*?commonjs-require.js$/)
-        }
-      }), 'vendor/**/*.js'))
-      .pipe(hbsFilter)
-      .pipe(commonjsWrap({
-        pathModifier: function(path) {
-          return path
-            .replace(/^.*?vendor\/javascripts\/handlebars\/.*?/, '')
-            .replace(/\.js$/, '')
-        }
-       }))
-      .pipe(hbsFilter.restore())
-      .pipe(concat('vendor.js'))
-      .pipe(gulp.dest('public/javascripts/'));
-  
+  var scripts = gulp.src(['bower_components/**/commonjs-require.js'].concat(mainBower({
+    filter: function(file){
+      // Want the JS files that are everfi-sdk files
+      return file.match(/.*?\.js$/) && !file.match(/everfi-sdk/) && !file.match(/.*?commonjs-require.js$/)
+    }
+  }), 'vendor/**/*.js'))
+    .pipe(sourcemaps.init())
+    .pipe(concat('vendor.js'))
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('public/assets/javascripts/'));
+
   var styles = gulp.src( mainBower({
-      filter: function(file){
-        // Want the CSS files that are everfi-sdk files
-        return file.match(/css$/) && !file.match(/everfi-sdk/);
-        }
-      }))
+    filter: function(file){
+      // Want the CSS files that are everfi-sdk files
+      return file.match(/css$/) && !file.match(/everfi-sdk/);
+    }
+  }))
+    .pipe(sourcemaps.init())
     .pipe(concat('vendor.css'))
-    .pipe(gulp.dest('public/stylesheets/'));
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('public/assets/stylesheets/'));
 
   var assets = gulp.src( mainBower({
-      filter: function(file){
-        return file.match(/(png|html|jpg|jpeg|woff|map)$/i) && !file.match(/everfi-sdk/);
-      }
-      }))
+    filter: function(file){
+      return file.match(/(png|html|jpg|jpeg|woff|map)$/i) && !file.match(/everfi-sdk/);
+    }
+  }))
     .pipe(gulp.dest('public/'));
 
-  merge(scripts, styles, assets);
+  return merge(scripts, styles, assets);
+});
+
+gulp.task('scripts', function() {
+  var hbsFilter = filter('**/*.hbs');
+  return gulp.src(['app/**/*.js', 'app/**/*.hbs'])
+    .pipe(sourcemaps.init())
+    .pipe(hbsFilter)
+    .pipe(handlebars())
+    .pipe(map(function (data, callback) {
+      data.defineModuleOptions.require = null;
+      callback(null, data);
+    }))
+    .pipe(defineModule('commonjs'))
+    .pipe(hbsFilter.restore())
+    .pipe(gulpIf(/\.js$/, commonjsWrap({
+      pathModifier: function (path) {
+        return path
+          .replace(/^.*?\/app\//, '')
+          .replace(/\.js$/, '');
+      }
+    })))
+    .pipe(concat('app.js'))
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('public/assets/javascripts/'))
+    .pipe(reload({stream: true}));
+});
+
+gulp.task('json', function() {
+  var module = gulp.src('app/modules/**/module.json')
+    .pipe(concat('modules.json', {newLine: ','}))
+    .pipe(wrap('[<%= contents %>]'))
+    .pipe(gulp.dest('public/content/'));
+
+  var content = gulp.src('app/**/content.*')
+    .pipe(map(function (file, cb) {
+      if (file.isNull()) return cb(null, file); // pass along
+      if (file.isStream()) return cb(new Error("Streaming not supported"));
+      if (file.path.indexOf('.yml') === -1) return cb(null, file);
+      var json;
+      var index = file.path.indexOf('app/');
+      var location = file.path.slice(index).split(require('path').sep).slice(2, 5);
+      var obj = {},
+        module = obj[location[0]] = {},
+        activity = module[location[1]] = {},
+        page = activity[location[2]] = {},
+        blocks = page['blocks'] = '<%= contents %>';
+      try {
+        json = yaml.load(String(file.contents.toString('utf8')));
+      } catch (e) {
+        console.log(e);
+        console.log(json);
+      }
+      file.path = gutil.replaceExtension(file.path, '.json');
+      file.contents = new Buffer(JSON.stringify(obj)
+        .replace('"<%= contents %>"', '<%= contents %>')
+        .replace('<%= contents %>', JSON.stringify(json)));
+      cb(null, file);
+    }))
+    .pipe(extend('module-content.json'))
+    .pipe(gulp.dest('public/content'))
+    .pipe(reload({stream: true}));
+
+  var course = gulp.src('app/course-settings.json')
+    .pipe(gulp.dest('public/content/'));
+
+  return merge.apply(null,
+    Array.prototype.concat.call(module, content, course)
+  );
 });
 
 gulp.task('locales', function() {
-  var languages = getLanguagesfromFilesSync('app/modules/**/locales/*/*.json', '.*?\/locales');
+  var languages = getLanguagesfromFilesSync('app/**/locales/*/*.json', '.*?\/locales');
   var locales   = languages.map(function(lang) {
-      return gulp.src('app/modules/**/locales/'+lang+'.json')
-        .pipe(extend(lang + '.json'))
-        .pipe(gulp.dest('public/content/locales/'));
+    return gulp.src('app/**/locales/'+lang+'.json')
+      .pipe(extend(lang + '.json'))
+      .pipe(gulp.dest('public/content/locales/'));
+  });
+
+  return merge.apply(null, locales);
+});
+
+/**
+ * assets - images, fonts, css
+ - pre-images
+ - copy module images to app/assets/images/structure/*module_key*
+ - images (depends on pre-images)
+ - copy everything from app/assets/images to public/assets/images (need to be there for compass)
+ - fonts
+ - copy everything from app/assets/stylesheets/fonts to public/assets/stylesheets/fonts
+ - pre-styles
+ - compile all page styles into app/styles/_pages.scss
+ - styles
+ - executes compass
+ - will look for images and fonts in the public directory
+ - build-styles
+ - ensures images (with pre-images) and fonts have been run before running styles
+ **/
+gulp.task('pre-images', function(){
+  var pageImages = glob.sync('app/modules/**/images/*')
+    .map(function (file) {
+      var location = file.split(require('path').sep).slice(2, 5);
+      var page = 'app/modules/' + location.join('/');
+      return gulp.src(page + '/images/*')
+        .pipe(changed('app/assets/images/structure/' + location[0]))
+        .pipe(gulp.dest('app/assets/images/structure/' + location[0]));
     });
 
-    merge.apply(null, locales);
+  return gulpMerge(pageImages);
 });
 
-gulp.task('assets', function(cb) {
-  return gulpMerge(gulp.src('app/assets/images/**/*', {base: 'app/assets/'})
-    .pipe(gulp.dest('public/app/assets')),
-    gulpMerge.apply(null, glob.sync('app/modules/**/images/*')
-    .map(function(file) {
-      var location = file.split(require('path').sep).slice(2,5);
-      var page     = 'app/modules/' + location.join('/');
-      return gulp.src(page + '/images/*', {base: page + '/images'})
-        .pipe(gulp.dest('public/images/structure/'+location[0]));
-  })));
+gulp.task('images', ['pre-images'], function() {
+  return gulp.src('app/assets/images/**/*')
+    .pipe(changed('public/assets/images/'))
+    .pipe(gulp.dest('public/assets/images/'));
 });
 
-gulp.task('deploy', ['build'], shell.task([
- 'aws s3 sync public/ s3://<%= deploy_bucket %> --acl public-read --cache-control "max-age=360000" --region "us-east-1"'
-], {templateData: {
-    deploy_bucket: DEPLOY_BUCKET
-  },
-  quiet: true
-  }));
+gulp.task('fonts', function(){
+  return gulp.src('app/assets/stylesheets/fonts/**')
+    .pipe(changed('public/assets/stylesheets/fonts/'))
+    .pipe(gulp.dest('public/assets/stylesheets/fonts/'));
+});
 
-// watch files for changes and reload
-gulp.task('serve', function() {
+function styles(){
+  console.log('This one takes a little while....');
+  var compassOpts ={
+    config_file: './config/compass.rb',
+    css: 'public/assets/stylesheets',
+    sass: 'app/styles',
+    images: 'public/assets/images',
+    fonts: 'public/assets/stylesheets/fonts',
+    logging: false,
+    sourcemap: true,
+    generated_images_dir: 'public/assets/images'
+  };
+  if(process.argv[3] === '--debug'){
+    compassOpts.debug = true;
+    compassOpts.logging = true;
+  }
+  var global = gulp.src(['app/styles/**/*.scss'])
+    .pipe(compass(compassOpts))
+    .pipe(gulp.dest('public/assets/stylesheets'))
+    .pipe(reload({stream:true}));
+
+  return merge(global);
+}
+gulp.task('pre-styles', function() {
+  return  gulp.src(['app/modules/**/*.scss'])
+    .pipe(concat('_pages.scss'))
+    .pipe(gulp.dest('app/styles'));
+});
+gulp.task('styles', styles);
+gulp.task('build-styles', ['pre-styles', 'images', 'fonts'], styles);
+
+/**
+ * build, deploy, serve
+ - build process
+ - library tasks, all concurrent: everfi-sdk, vendor, scripts, json, locales
+ - asset tasks:
+ - pre-styles, pre-images, and fonts start concurrently
+ - once pre-images is complete, images starts
+ - once images, pre-styles, and fonts are complete, styles starts
+ - deploy: after building, deploys to s3
+ - serve: starts a browserSync server for the public folder
+ - default: after building, starts serve and watches for changes
+ */
+gulp.task('build', ['everfi-sdk', 'vendor', 'scripts', 'json', 'locales', 'build-styles']);
+
+gulp.task('deploy', ['build'],
+  shell.task([
+    'aws s3 sync public/ s3://<%= deploy_bucket %> --acl public-read --cache-control "max-age=360000" --region "us-east-1"'
+  ], {
+    templateData: {
+      deploy_bucket: DEPLOY_BUCKET
+    },
+    quiet: true
+  })
+);
+
+function serve() {
   browserSync({
     server: {
-      baseDir: 'public'
+      baseDir: 'public',
+      middleware: function (req, res, next) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+        next();
+      }
     },
     open: false
   });
-});
+}
+gulp.task('serve', serve);
 
-// -----------------------------------------------------------
-
-gulp.task('build', ['everfi-sdk', 'vendor', 'locales', 'json', 'assets', 'scripts', 'all-styles']);
-
-gulp.task('default', ['everfi-sdk', 'vendor', 'locales', 'json', 'assets', 'scripts', 'all-styles', 'serve'], function(){
-   gulp.watch(["app/modules/**/*.scss"], ['pre-styles']);
-   gulp.watch(["app/styles/**/*.scss"], ['styles']);
-   gulp.watch(["app/modules/**/images/**/*"], ['assets']);
-   gulp.watch(['bower_components/everfi-sdk/public/*'], ['everfi-sdk']);
-   gulp.watch(["app/**/*.js", "app/**/*.hbs"], ['scripts']);
-   gulp.watch(["app/**/content.json", "app/**/content.yml", "app/**/module.json"], ['json']);
-   gulp.watch(["app/**/locales/*.json"], ['locales']);
+gulp.task('default', ['build'], function() {
+  serve();
+  gulp.watch(["app/modules/**/*.scss"], ['pre-styles']);
+  gulp.watch(["app/styles/**/*.scss"], ['styles']);
+  gulp.watch(["app/modules/**/images/**/*"], ['images']);
+  gulp.watch(['bower_components/everfi-sdk/public/*'], ['everfi-sdk']);
+  gulp.watch(["app/**/*.js", "app/**/*.hbs"], ['scripts']);
+  gulp.watch(["app/**/content.json", "app/**/content.yml", "app/**/module.json"], ['json']);
+  gulp.watch(["app/**/locales/*.json"], ['locales']);
 });

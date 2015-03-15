@@ -1,21 +1,13 @@
 {
-  "name": "Journey",
+  "name": "*Your New Course*",
   "version": "0.1.0",
   "dependencies": {
-    "everfi-sdk": "1.0.0"
+    "everfi-sdk": "1.0.0",
+    "commonjs-require": "~1.4.5"
   },
   "overrides": {
     "json2": {
       "main": "json2.js"
-    },
-    "everfi-sdk": {
-      "main": [
-        "public/index.html",
-        "public/javascripts/everfi-sdk.js",
-        "public/javascripts/ef.js",
-        "public/stylesheets/everfi-sdk.css",
-        "public/images/icons.png"
-      ]
     },
     "backbone": {
       "dependencies": {

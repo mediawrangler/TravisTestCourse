@@ -1,0 +1,7 @@
+{
+  "menu": {
+    "type": "module",
+    "groups": true
+  },
+  "supported_languages": [ "en" ]
+}

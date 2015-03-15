@@ -1,5 +1,4 @@
-var BaseExtension = require('javascripts/base-extension');
-var animations = require('animations');
+var BaseExtension = require('base-extension');
 
 var page1 = _.defaults({
   initialize: function(view) {
