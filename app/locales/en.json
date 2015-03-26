@@ -1,0 +1,19 @@
+{
+  "course": {
+    "header": "Put some content here!",
+    "showNarration": "Show",
+    "hideNarration": "Hide",
+    "pause": "Pause",
+    "resume": "Resume",
+    "replay": "Replay",
+    "reload": "Reload",
+    "play": "Play",
+    "muteOn": "On",
+    "muteOff": "Off",
+    "mute": "Mute",
+    "okButton": "OK",
+    "backButton": "Back",
+    "forwardPopover": "Page is done, time to go to the next one!",
+    "forwardButton": "Next Page"
+  }
+}
