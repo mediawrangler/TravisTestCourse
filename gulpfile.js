@@ -376,16 +376,16 @@ gulp.task('everfi-sdk', function() {
       return (file.match(/js\.map$/) || file.match(/js$/)) && file.match(/everfi-sdk/);
     }
   }))
-    .pipe(changed('public/assets/javascripts'))
-    .pipe(gulp.dest('public/assets/javascripts'));
+    .pipe(changed('public/javascripts'))
+    .pipe(gulp.dest('public/javascripts'));
 
   var ef_sdk_css = gulp.src(mainBower({
     filter: function (file) {
       return (file.match(/css\.map$/) || file.match(/css$/)) && file.match(/everfi-sdk/);
     }
   }))
-    .pipe(changed('public/assets/stylesheets'))
-    .pipe(gulp.dest('public/assets/stylesheets'));
+    .pipe(changed('public/stylesheets'))
+    .pipe(gulp.dest('public/stylesheets'));
 
   var ef_sdk_index = gulp.src(mainBower({
     filter: function (file) {
@@ -408,7 +408,7 @@ gulp.task('vendor', function() {
     .pipe(sourcemaps.init())
     .pipe(concat('vendor.js'))
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('public/assets/javascripts/'));
+    .pipe(gulp.dest('public/javascripts/'));
 
   var styles = gulp.src( mainBower({
     filter: function(file){
@@ -419,7 +419,7 @@ gulp.task('vendor', function() {
     .pipe(sourcemaps.init())
     .pipe(concat('vendor.css'))
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('public/assets/stylesheets/'));
+    .pipe(gulp.dest('public/stylesheets/'));
 
   var assets = gulp.src( mainBower({
     filter: function(file){
@@ -452,7 +452,7 @@ gulp.task('scripts', function() {
     })))
     .pipe(concat('app.js'))
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('public/assets/javascripts/'))
+    .pipe(gulp.dest('public/javascripts/'))
     .pipe(reload({stream: true}));
 });
 
@@ -515,9 +515,9 @@ gulp.task('locales', function() {
  - pre-images
  - copy module images to app/assets/images/structure/*module_key*
  - images (depends on pre-images)
- - copy everything from app/assets/images to public/assets/images (need to be there for compass)
+ - copy everything from app/assets/images to public/images (need to be there for compass)
  - fonts
- - copy everything from app/assets/stylesheets/fonts to public/assets/stylesheets/fonts
+ - copy everything from app/assets/fonts to public/fonts
  - pre-styles
  - compile all page styles into app/styles/_pages.scss
  - styles
@@ -541,27 +541,27 @@ gulp.task('pre-images', function(){
 
 gulp.task('images', ['pre-images'], function() {
   return gulp.src('app/assets/images/**/*')
-    .pipe(changed('public/assets/images/'))
-    .pipe(gulp.dest('public/assets/images/'));
+    .pipe(changed('public/images/'))
+    .pipe(gulp.dest('public/images/'));
 });
 
 gulp.task('fonts', function(){
-  return gulp.src('app/assets/stylesheets/fonts/**')
-    .pipe(changed('public/assets/stylesheets/fonts/'))
-    .pipe(gulp.dest('public/assets/stylesheets/fonts/'));
+  return gulp.src('app/assets/fonts/**')
+    .pipe(changed('public/fonts/'))
+    .pipe(gulp.dest('public/fonts/'));
 });
 
 function styles(){
   console.log('This one takes a little while....');
   var compassOpts ={
     config_file: './config/compass.rb',
-    css: 'public/assets/stylesheets',
+    css: 'public/stylesheets',
     sass: 'app/styles',
-    images: 'public/assets/images',
-    fonts: 'public/assets/stylesheets/fonts',
+    images: 'public/images',
+    fonts: 'public/stylesheets/fonts',
     logging: false,
     sourcemap: true,
-    generated_images_dir: 'public/assets/images'
+    generated_images_dir: 'public/images'
   };
   if(process.argv[3] === '--debug'){
     compassOpts.debug = true;
@@ -569,21 +569,15 @@ function styles(){
   }
   var global = gulp.src(['app/styles/**/*.scss'])
     .pipe(compass(compassOpts))
-    .pipe(gulp.dest('public/assets/stylesheets'))
+    .pipe(gulp.dest('public/stylesheets'))
     .pipe(reload({stream:true}));
 
   return merge(global);
 }
 gulp.task('pre-styles', function() {
-  var pageStyles = gulp.src(['app/modules/**/*.scss'])
+  return  gulp.src(['app/modules/**/*.scss'])
     .pipe(concat('_pages.scss'))
     .pipe(gulp.dest('app/styles'));
-
-  var courseStyles = gulp.src(['app/menu/*.scss', 'app/portfolio/*.scss'])
-    .pipe(concat('_course.scss'))
-    .pipe(gulp.dest('app/styles'));
-
-  return merge(pageStyles, courseStyles);
 });
 gulp.task('styles', styles);
 gulp.task('build-styles', ['pre-styles', 'images', 'fonts'], styles);
