@@ -3,6 +3,7 @@
     "header": "Put some content here!",
     "showNarration": "Show",
     "hideNarration": "Hide",
+    "narrationCaption": "Narration",
     "pause": "Pause",
     "resume": "Resume",
     "replay": "Replay",

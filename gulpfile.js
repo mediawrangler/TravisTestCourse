@@ -434,7 +434,6 @@ gulp.task('vendor', function() {
 gulp.task('scripts', function() {
   var hbsFilter = filter('**/*.hbs');
   return gulp.src(['app/**/*.js', 'app/**/*.hbs'])
-    .pipe(sourcemaps.init())
     .pipe(hbsFilter)
     .pipe(handlebars())
     .pipe(map(function (data, callback) {
@@ -450,6 +449,7 @@ gulp.task('scripts', function() {
           .replace(/\.js$/, '');
       }
     })))
+    .pipe(sourcemaps.init())
     .pipe(concat('app.js'))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('public/javascripts/'))
@@ -558,7 +558,7 @@ function styles(){
     css: 'public/stylesheets',
     sass: 'app/styles',
     images: 'public/images',
-    fonts: 'public/stylesheets/fonts',
+    fonts: 'public/fonts',
     logging: false,
     sourcemap: true,
     generated_images_dir: 'public/images'
@@ -596,7 +596,11 @@ gulp.task('build-styles', ['pre-styles', 'images', 'fonts'], styles);
  */
 gulp.task('build', ['everfi-sdk', 'vendor', 'scripts', 'json', 'locales', 'build-styles']);
 
-gulp.task('deploy', ['build'],
+gulp.task('deploy-bucket', function(){
+  console.log('Deployment Bucket is: ' + DEPLOY_BUCKET);
+});
+
+gulp.task('deploy', ['build', 'deploy-bucket'],
   shell.task([
     'aws s3 sync public/ s3://<%= deploy_bucket %> --acl public-read --cache-control "max-age=360000" --region "us-east-1"'
   ], {
