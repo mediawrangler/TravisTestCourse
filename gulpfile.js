@@ -28,6 +28,9 @@ var yaml  = require('js-yaml');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 
+var requireDir = require('require-dir');
+var dir = requireDir('./tasks');
+
 /**
  * Deploy Config
  */
@@ -623,7 +626,7 @@ gulp.task('deploy', ['build', 'deploy-bucket'],
 );
 
 function serve() {
-  browserSync({
+  return browserSync({
     server: {
       baseDir: 'public',
       middleware: function (req, res, next) {
@@ -633,7 +636,8 @@ function serve() {
         next();
       }
     },
-    open: false
+    open: false,
+    tunnel: true
   });
 }
 gulp.task('serve', serve);
@@ -642,16 +646,16 @@ gulp.task('default', ['build'], function() {
   serve();
   watch("app/modules/**/*.scss", function() {
     run('pre-styles'); });
-  watch("app/styles/**/*.scss",  function() { 
+  watch("app/styles/**/*.scss",  function() {
     run('styles'); });
-  watch("app/modules/**/images/**/*", function() { 
+  watch("app/modules/**/images/**/*", function() {
     run('images'); });
-  watch("bower_components/everfi-sdk/public/*", function() { 
+  watch("bower_components/everfi-sdk/public/*", function() {
     run('everfi-sdk'); });
-  watch(["app/**/*.js", "app/**/*.hbs"], function() { 
+  watch(["app/**/*.js", "app/**/*.hbs"], function() {
     run('scripts'); });
-  watch(["app/**/content.json", "app/**/content.yml", "app/**/module.json", "app/**/groups.json"], function() { 
+  watch(["app/**/content.json", "app/**/content.yml", "app/**/module.json", "app/**/groups.json"], function() {
     run('json'); });
-  watch("app/**/locales/*.json", function() { 
+  watch("app/**/locales/*.json", function() {
     run('locales'); });
 });
