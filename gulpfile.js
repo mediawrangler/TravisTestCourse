@@ -523,6 +523,8 @@ gulp.task('locales', function() {
  - copy everything from app/assets/images to public/images (need to be there for compass)
  - fonts
  - copy everything from app/assets/fonts to public/fonts
+ - audio
+ - copy everything from app/assets/audio to public/audio
  - pre-styles
  - compile all page styles into app/styles/_pages.scss
  - styles
@@ -554,6 +556,12 @@ gulp.task('fonts', function(){
   return gulp.src('app/assets/fonts/**')
     .pipe(changed('public/fonts/'))
     .pipe(gulp.dest('public/fonts/'));
+});
+
+gulp.task('audio', function(){
+  return gulp.src('app/assets/audio/**')
+    .pipe(changed('public/audio/'))
+    .pipe(gulp.dest('public/audio/'));
 });
 
 function styles(){
@@ -591,7 +599,7 @@ gulp.task('pre-styles', function() {
   return merge(pageStyles, courseStyles);
 });
 gulp.task('styles', styles);
-gulp.task('build-styles', ['pre-styles', 'images', 'fonts'], styles);
+gulp.task('build-styles', ['pre-styles', 'images', 'fonts', 'audio'], styles);
 
 /**
  * build, deploy, serve
@@ -642,16 +650,16 @@ gulp.task('default', ['build'], function() {
   serve();
   watch("app/modules/**/*.scss", function() {
     run('pre-styles'); });
-  watch("app/styles/**/*.scss",  function() { 
+  watch("app/styles/**/*.scss",  function() {
     run('styles'); });
-  watch("app/modules/**/images/**/*", function() { 
+  watch("app/modules/**/images/**/*", function() {
     run('images'); });
-  watch("bower_components/everfi-sdk/public/*", function() { 
+  watch("bower_components/everfi-sdk/public/*", function() {
     run('everfi-sdk'); });
-  watch(["app/**/*.js", "app/**/*.hbs"], function() { 
+  watch(["app/**/*.js", "app/**/*.hbs"], function() {
     run('scripts'); });
-  watch(["app/**/content.json", "app/**/content.yml", "app/**/module.json", "app/**/groups.json"], function() { 
+  watch(["app/**/content.json", "app/**/content.yml", "app/**/module.json", "app/**/groups.json"], function() {
     run('json'); });
-  watch("app/**/locales/*.json", function() { 
+  watch("app/**/locales/*.json", function() {
     run('locales'); });
 });
