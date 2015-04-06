@@ -502,7 +502,6 @@ gulp.task('json', function() {
   return merge.apply(null,
     Array.prototype.concat.call(group, module, content, course)
   );
-
 });
 
 gulp.task('locales', function() {
@@ -581,9 +580,15 @@ function styles(){
   return merge(global);
 }
 gulp.task('pre-styles', function() {
-  return  gulp.src(['app/modules/**/*.scss'])
+  var pageStyles = gulp.src(['app/modules/**/*.scss'])
     .pipe(concat('_pages.scss'))
     .pipe(gulp.dest('app/styles'));
+
+  var courseStyles = gulp.src(['app/menu/*.scss', 'app/portfolio/*.scss'])
+    .pipe(concat('_course.scss'))
+    .pipe(gulp.dest('app/styles'));
+
+  return merge(pageStyles, courseStyles);
 });
 gulp.task('styles', styles);
 gulp.task('build-styles', ['pre-styles', 'images', 'fonts'], styles);
@@ -648,4 +653,5 @@ gulp.task('default', ['build'], function() {
   watch(["app/**/content.json", "app/**/content.yml", "app/**/module.json", "app/**/groups.json"], function() { 
     run('json'); });
   watch("app/**/locales/*.json", function() { 
-    run('locales'); });});
+    run('locales'); });
+});
