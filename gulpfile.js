@@ -18,8 +18,10 @@ var defineModule = require('gulp-define-module');
 var prompt       = require('gulp-prompt');
 var map          = require('map-stream');
 var changed      = require('gulp-changed');
+var watch        = require('gulp-watch');
 
 var shell = require('gulp-shell');
+var run   = require('run-sequence');
 var gutil = require("gulp-util");
 var yaml  = require('js-yaml');
 
@@ -457,6 +459,9 @@ gulp.task('scripts', function() {
 });
 
 gulp.task('json', function() {
+  var group  = gulp.src('app/modules/groups.json')
+    .pipe(gulp.dest('public/content'));
+
   var module = gulp.src('app/modules/**/module.json')
     .pipe(concat('modules.json', {newLine: ','}))
     .pipe(wrap('[<%= contents %>]'))
@@ -495,8 +500,9 @@ gulp.task('json', function() {
     .pipe(gulp.dest('public/content/'));
 
   return merge.apply(null,
-    Array.prototype.concat.call(module, content, course)
+    Array.prototype.concat.call(group, module, content, course)
   );
+
 });
 
 gulp.task('locales', function() {
@@ -629,11 +635,17 @@ gulp.task('serve', serve);
 
 gulp.task('default', ['build'], function() {
   serve();
-  gulp.watch(["app/modules/**/*.scss"], ['pre-styles']);
-  gulp.watch(["app/styles/**/*.scss"], ['styles']);
-  gulp.watch(["app/modules/**/images/**/*"], ['images']);
-  gulp.watch(['bower_components/everfi-sdk/public/*'], ['everfi-sdk']);
-  gulp.watch(["app/**/*.js", "app/**/*.hbs"], ['scripts']);
-  gulp.watch(["app/**/content.json", "app/**/content.yml", "app/**/module.json"], ['json']);
-  gulp.watch(["app/**/locales/*.json"], ['locales']);
-});
+  watch("app/modules/**/*.scss", function() {
+    run('pre-styles'); });
+  watch("app/styles/**/*.scss",  function() { 
+    run('styles'); });
+  watch("app/modules/**/images/**/*", function() { 
+    run('images'); });
+  watch("bower_components/everfi-sdk/public/*", function() { 
+    run('everfi-sdk'); });
+  watch(["app/**/*.js", "app/**/*.hbs"], function() { 
+    run('scripts'); });
+  watch(["app/**/content.json", "app/**/content.yml", "app/**/module.json", "app/**/groups.json"], function() { 
+    run('json'); });
+  watch("app/**/locales/*.json", function() { 
+    run('locales'); });});
