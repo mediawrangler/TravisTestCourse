@@ -1,5 +1,4 @@
 var system = require('system');
-var args = system.args;
 
 var page = require('webpage').create();
 page.open('__url__', function(status) {
