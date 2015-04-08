@@ -5,6 +5,7 @@
   "description": "Example",
   "index": 1,
   "id": "example_module",
+  "group": 1,
   "activities": [
     {
       "pages": [
