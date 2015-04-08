@@ -28,6 +28,9 @@ var yaml  = require('js-yaml');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 
+var requireDir = require('require-dir');
+var dir = requireDir('./tasks');
+
 /**
  * Deploy Config
  */
@@ -631,7 +634,7 @@ gulp.task('deploy', ['build', 'deploy-bucket'],
 );
 
 function serve() {
-  browserSync({
+  return browserSync({
     server: {
       baseDir: 'public',
       middleware: function (req, res, next) {
