@@ -636,8 +636,7 @@ function serve() {
         next();
       }
     },
-    open: false,
-    tunnel: true
+    open: false
   });
 }
 gulp.task('serve', serve);

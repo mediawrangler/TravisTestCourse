@@ -4,12 +4,12 @@ var through = require('through2');
 var fs = require('fs');
 
 var map = require('map-stream');
-var prompt = require('prompt');
 var extend = require('gulp-extend');
 var glob = require('glob');
 
 var phantom = require("gulp-phantom");
 var vfsFake = require('vinyl-fs-fake');
+var ngrok = require('ngrok');
 
 var ProgressBar = require('progress');
 
@@ -17,7 +17,7 @@ var progressBar = {
   init: function(count){
     //can't make this a stream method because it needs the count at the beginning
     // and a stream won't tell us how many files until it finished
-    this.bar = new ProgressBar(' processing files [:bar] :percent :etas ', {
+    this.bar = new ProgressBar(' processing ' + count + ' files [:bar] :percent :etas ', {
       total: count
     });
   },
@@ -77,20 +77,13 @@ gulp.task('acc-audit', function(cb) {
   if (htmlFiles === 0){
     console.log("There's nothing in public/raw/, are you sure you ran `gulp generate-pages-html`?")
   } else {
-    prompt.start();
-    var prompts = {
-      properties: {
-        tunnelPrefix: {
-          message: 'Enter the prefix for your local tunnel URL (i.e. just the random char string):'
-        }
-      }
-    };
+    var phantomScripts = phantomScriptPerPage('axs-audit');
+    progressBar.init(phantomScripts.length);
 
-    return prompt.get(prompts, function (err, result) {
-      var phantomScripts = phantomScriptPerPage('axs-audit')[0];
-      progressBar.init(1);
+    ngrok.connect(3000, function (err, url) {
+      // https://757c1652.ngrok.com -> 127.0.0.1:8080
 
-      return vfsFake.src(phantomScripts)
+      vfsFake.src(phantomScripts)
         .pipe(phantom({
           ext: '.html',
           debug: true
@@ -102,7 +95,7 @@ gulp.task('acc-audit', function(cb) {
             console.log(file.path + ' does not have JSON in it');
             console.log(file.contents.toString());
           }
-          var request = new ACheckerRequest('https://' + result.tunnelPrefix + '.localtunnel.me/raw/' + file.path);
+          var request = new ACheckerRequest(url + '/raw/' + file.path);
           request.getResults(function (aCheckerData) {
             var results = {};
             var tempObj = results;
@@ -121,7 +114,11 @@ gulp.task('acc-audit', function(cb) {
         }))
         .pipe(progressBar.tick())
         .pipe(extend('acc-output.json'))
-        .pipe(gulp.dest("./public/raw/"));
+        .pipe(gulp.dest("./public/raw/"))
+        .on('end', function(){
+          ngrok.disconnect();
+          cb();
+        });
     });
   }
 });
