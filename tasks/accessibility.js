@@ -17,7 +17,7 @@ var progressBar = {
   init: function(count){
     //can't make this a stream method because it needs the count at the beginning
     // and a stream won't tell us how many files until it finished
-    this.bar = new ProgressBar(' processing ' + count + ' files [:bar] :percent :etas ', {
+    this.bar = new ProgressBar(' processed :current of :total in :elapseds [:bar] :percent complete, :etas remaining', {
       total: count
     });
   },
