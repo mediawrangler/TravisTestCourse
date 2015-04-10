@@ -502,8 +502,17 @@ gulp.task('json', function() {
   var course = gulp.src('app/course-settings.json')
     .pipe(gulp.dest('public/content/'));
 
+  var localData = gulp.src('app/local-data/**/*.json')
+    .pipe(commonjsWrap({
+      pathModifier: function (path) {
+        return path.replace(/^.*?\/app\//, '');
+      }
+    }))
+    .pipe(concat('local-data.js'))
+    .pipe(gulp.dest('public/javascripts/'));
+
   return merge.apply(null,
-    Array.prototype.concat.call(group, module, content, course)
+    Array.prototype.concat.call(group, module, content, course, localData)
   );
 });
 
