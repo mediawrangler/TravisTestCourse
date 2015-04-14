@@ -503,6 +503,7 @@ gulp.task('json', function() {
     .pipe(gulp.dest('public/content/'));
 
   var localData = gulp.src('app/local-data/**/*.json')
+    .pipe(wrap('module.exports = <%= contents %>;'))
     .pipe(commonjsWrap({
       pathModifier: function (path) {
         return path.replace(/^.*?\/app\//, '');
