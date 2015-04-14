@@ -1,7 +1,12 @@
 {
+  "name": "",
+  "video_host": "https://s3.amazonaws.com/everfi-curriculums",
   "menu": {
     "type": "module",
     "groups": true
   },
-  "supported_languages": [ "en" ]
+  "supported_languages": [ "en" ],
+  "production": {
+    "video_host": "https://d1vyejqi0lnyjd.cloudfront.net"
+  }
 }
