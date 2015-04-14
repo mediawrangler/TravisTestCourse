@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "accessibility-developer-tools": "^2.6.0",
+    "aws-sdk": "2.1.20",
     "glob": "^4.3.2",
     "gulp-changed": "^1.2.1",
     "gulp-compass": "^2.0.3",
@@ -48,6 +49,7 @@
     "merge2": "^0.3.1",
     "ngrok": "^0.1.99",
     "progress": "^1.1.8",
+    "prompt": "^0.2.14",
     "request": "^2.54.0",
     "require-dir": "^0.3.0",
     "run-sequence": "^1.0.2",

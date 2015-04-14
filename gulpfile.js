@@ -433,12 +433,16 @@ gulp.task('vendor', function() {
   }))
     .pipe(gulp.dest('public/'));
 
-  return merge(scripts, styles, assets);
+  var js = gulp.src('app/assets/javascripts/**/*')
+    .pipe(changed('public/javascripts/'))
+    .pipe(gulp.dest('public/javascripts/'));
+
+  return merge(scripts, styles, assets, js);
 });
 
 gulp.task('scripts', function() {
   var hbsFilter = filter('**/*.hbs');
-  return gulp.src(['app/**/*.js', 'app/**/*.hbs'])
+  return gulp.src(['app/**/*.js', 'app/**/*.hbs', '!app/assets/javascripts/**/*'])
     .pipe(hbsFilter)
     .pipe(handlebars())
     .pipe(map(function (data, callback) {
