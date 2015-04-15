@@ -1,0 +1,12 @@
+[
+  {
+    "id": 68,
+    "type": "PolicyResource",
+    "sub_type": "Alcohol Policy",
+    "default": false,
+    "name": "A blank test test",
+    "url": "",
+    "body": "aa",
+    "requires_e_signature": false
+  }
+]
