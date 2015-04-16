@@ -504,6 +504,12 @@ gulp.task('json', function() {
     .pipe(reload({stream: true}));
 
   var course = gulp.src('app/course-settings.json')
+    .pipe(map(function(file, cb){
+      var settings = JSON.parse(file.contents.toString('utf8'));
+      settings.name = DEPLOY_CURRICULUM;
+      file.contents = new Buffer(JSON.stringify(settings));
+      cb(null, file);
+    }))
     .pipe(gulp.dest('public/content/'));
 
   var localData = gulp.src('app/local-data/**/*.json')

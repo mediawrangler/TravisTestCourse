@@ -1,0 +1,24 @@
+{
+  "example-module": {
+    "example-module-activity": {
+      "page-2": {
+        "instructions": {
+          "blocks": [
+            {
+              "type": "modal",
+              "description": "someContent",
+              "id": "instrModal"
+            }
+          ]
+        },
+        "blocks": [
+          {
+            "type": "video",
+            "player": "youTube",
+            "video_id": "1lBdlh3AGSc"
+          }
+        ]
+      }
+    }
+  }
+}

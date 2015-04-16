@@ -1,0 +1,33 @@
+{
+  "example-module": {
+    "example-module-activity": {
+      "page-1": {
+        "instructions": {
+          "blocks": [
+            {
+              "type": "modal",
+              "description": "some content",
+              "id": "modal_id"
+            },
+            {
+              "type": "audio",
+              "audio_id": "Shot_Screen1_VO",
+              "narration": "Something about force and stuff..."
+            }
+          ]
+        },
+        "blocks": [
+          {
+            "type": "text",
+            "description": "page 1 is empty!"
+          },
+          {
+            "type": "audio",
+            "audio_id": "Shot_Screen1_VO_2",
+            "narration": "Something about force and stuff..."
+          }
+        ]
+      }
+    }
+  }
+}

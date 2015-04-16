@@ -25,9 +25,6 @@
     },
     "bootstrap-accessibility-plugin": {
       "main": "plugins/js/bootstrap-accessibility-fn.js"
-    },
-    "soundmanager2": {
-      "main": "script/soundmanager2.js"
     }
   }
 }
