@@ -1,6 +1,6 @@
 {
   "menu": {
-    "module": {
+    "home": {
       "blocks": [
         {
           "type": "text",
@@ -9,6 +9,9 @@
               "header": "header"
             }
           ]
+        },
+        {
+          "type": "module"
         }
       ]
     }
