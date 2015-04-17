@@ -615,7 +615,7 @@ gulp.task('pre-styles', function() {
     .pipe(concat('_pages.scss'))
     .pipe(gulp.dest('app/styles'));
 
-  var courseStyles = gulp.src(['app/menu/*.scss', 'app/portfolio/*.scss'])
+  var courseStyles = gulp.src(['app/menu/**/*.scss', 'app/portfolio/**/*.scss'])
     .pipe(concat('_course.scss'))
     .pipe(gulp.dest('app/styles'));
 
