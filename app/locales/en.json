@@ -1,6 +1,6 @@
 {
   "course": {
-    "header": "Put some content here!",
+    "title": "Transit",
     "showNarration": "Show",
     "hideNarration": "Hide",
     "narrationCaption": "Narration",
@@ -15,6 +15,14 @@
     "okButton": "OK",
     "backButton": "Back",
     "forwardPopover": "Page is done, time to go to the next one!",
-    "forwardButton": "Next Page"
+    "forwardButton": "Next Page",
+    "portfolioButton": "Action Plan",
+    "surveyRedirectLocal": "If you weren't local you'd be redirected to survey",
+    "clickToProceed": "Click Here to Proceed",
+    "surveyAlreadyCompleted": "You have already completed this survey",
+    "surveyRedirect": "You are being redirected to a survey",
+    "surveyRedirectText": "If you are not redirect in 5 seconds",
+    "surveyRedirectLinkText": "click here",
+    "srSkipText": "Press shift plus control plus {{accessibility.skipKey}} to continue to the next page when you are ready."
   }
 }

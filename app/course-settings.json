@@ -11,6 +11,9 @@
   "supported_languages": [ "en" ],
   "surveys": [
   ],
+  "accessibility": {
+    "skipKey": "s"
+  }
   "production": {
     "media_host": "https://d1vyejqi0lnyjd.cloudfront.net/curriculums"
   }
