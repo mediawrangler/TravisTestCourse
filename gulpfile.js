@@ -671,7 +671,7 @@ gulp.task('serve', serve);
 
 gulp.task('default', ['build'], function() {
   serve();
-  watch("app/modules/**/*.scss", function() {
+  watch(["app/modules/**/*.scss", "app/menu/*.scss", "app/portfolio/*.scss"], function() {
     run('pre-styles'); });
   watch("app/styles/**/*.scss",  function() {
     run('styles'); });
