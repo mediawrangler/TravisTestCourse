@@ -1,0 +1,22 @@
+machine:
+  node:
+    version: 0.12.2
+  pre:
+    - sudo pip install awscli
+dependencies:
+  post:
+    - gem install compass
+    - ./node_modules/bower/bin/bower install
+deployment:
+  production:
+    branch: master
+    commands:
+      - ./node_modules/gulp/bin/gulp.js deploy
+  release:
+    branch: /release\/.*/
+    commands:
+      - ./node_modules/gulp/bin/gulp.js deploy
+  develop:
+    branch: develop
+    commands:
+      - ./node_modules/gulp/bin/gulp.js deploy-develop
