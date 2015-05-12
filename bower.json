@@ -1,8 +1,9 @@
 {
-  "name": "*Your New Course*",
-  "version": "0.1.0",
+  "author": "EverFi",
+  "name": "Transit",
+  "version": "2.0.0",
   "dependencies": {
-    "everfi-sdk": "1.0.0",
+    "everfi-sdk": "git@github.com:EverFi/ContentPartnerAPI.git#sdk-next",
     "commonjs-require": "~1.4.5"
   },
   "overrides": {
@@ -15,16 +16,22 @@
         "jquery": "*"
       }
     },
-    "bootstrap":{
+    "bootstrap": {
       "dependencies": {
         "jquery-ui": "*"
       }
     },
     "font-awesome": {
-        "main": ["fonts", "css"]
+      "main": [
+        "fonts",
+        "css"
+      ]
     },
     "bootstrap-accessibility-plugin": {
       "main": "plugins/js/bootstrap-accessibility-fn.js"
+    },
+    "soundmanager2": {
+      "main": "script/soundmanager2.js"
     }
   }
 }
