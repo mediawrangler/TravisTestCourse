@@ -9,9 +9,10 @@
     "url": ""
   },
   "scripts": {
-    "start": "gulp"
+    "start": "gulp",
+    "test": "gulp test"
   },
-   "dependencies": {
+  "dependencies": {
     "browser-sync": "^1.7.2",
     "gulp": "^3.8.10",
     "gulp-concat": "^2.4.2",
@@ -27,6 +28,8 @@
   "devDependencies": {
     "accessibility-developer-tools": "^2.6.0",
     "aws-sdk": "2.1.20",
+    "bower": "^1.4.1",
+    "chai": "*",
     "glob": "^4.3.2",
     "gulp-changed": "^1.2.1",
     "gulp-compass": "^2.0.3",
@@ -35,6 +38,7 @@
     "gulp-extend": "^0.2.0",
     "gulp-handlebars": "^3.0.1",
     "gulp-if": "^1.2.5",
+    "gulp-karma": "0.0.4",
     "gulp-optipng": "0.0.2",
     "gulp-phantom": "0.0.6",
     "gulp-prompt": "^0.1.1",
@@ -45,14 +49,22 @@
     "gulp-yaml": "^0.2.3",
     "handlebars": "^2.0.0",
     "js-yaml": "^3.2.7",
+    "karma": "^0.12.31",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^0.1.10",
+    "karma-mocha": "^0.1.10",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-sinon": "^1.0.4",
     "map-stream": "0.0.5",
     "merge2": "^0.3.1",
+    "mocha": "*",
     "ngrok": "^0.1.99",
     "progress": "^1.1.8",
     "prompt": "^0.2.14",
     "request": "^2.54.0",
     "require-dir": "^0.3.0",
     "run-sequence": "^1.0.2",
+    "sinon": "^1.14.1",
     "through2": "^0.6.3",
     "vinyl-fs-fake": "^1.1.0",
     "xml2js": "^0.4.6",

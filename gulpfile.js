@@ -30,6 +30,7 @@ var reload = browserSync.reload;
 
 var requireDir = require('require-dir');
 var dir = requireDir('./tasks');
+var karma = require('karma').server;
 
 /**
  * Deploy Config
@@ -42,6 +43,10 @@ var DEPLOY_CURRICULUM = require('./package').name,
     DEPLOY_CURRICULUM,
     '/',
     DEPLOY_VERSION
+  ].join(''),
+  DEVELOP_BUCKET     = ['everfi-curriculums/curriculums/',
+    DEPLOY_CURRICULUM,
+    '/develop'
   ].join('');
 
 /**
@@ -507,7 +512,7 @@ gulp.task('json', function() {
     .pipe(map(function(file, cb){
       var settings = JSON.parse(file.contents.toString('utf8'));
       settings.name = DEPLOY_CURRICULUM;
-      file.contents = new Buffer(JSON.stringify(settings));
+      file.contents = new Buffer(JSON.stringify(settings, null, 2));
       cb(null, file);
     }))
     .pipe(gulp.dest('public/content/'));
@@ -642,7 +647,12 @@ gulp.task('deploy-bucket', function(){
   console.log('Deployment Bucket is: ' + DEPLOY_BUCKET);
 });
 
+gulp.task('develop-bucket', function(){
+  console.log('Develop Deployment Bucket is: ' + DEVELOP_BUCKET);
+});
+
 gulp.task('deploy', ['build', 'deploy-bucket'],
+
   shell.task([
     'aws s3 sync public/ s3://<%= deploy_bucket %> --acl public-read --cache-control "max-age=360000" --region "us-east-1"'
   ], {
@@ -652,6 +662,29 @@ gulp.task('deploy', ['build', 'deploy-bucket'],
     quiet: true
   })
 );
+
+gulp.task('deploy-develop', ['build', 'develop-bucket'],
+
+  shell.task([
+    'aws s3 sync public/ s3://<%= deploy_bucket %> --acl public-read --cache-control "max-age=0" --region "us-east-1"'
+  ], {
+    templateData: {
+      deploy_bucket: DEVELOP_BUCKET
+    },
+    quiet: true
+  })
+);
+
+
+/**
+ * Run test once and exit
+ */
+gulp.task('test', ['vendor', 'everfi-sdk', 'scripts', 'json', 'locales'], function (done) {
+  karma.start({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done);
+});
 
 function serve() {
   return browserSync({
