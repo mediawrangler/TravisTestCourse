@@ -32,6 +32,12 @@
     },
     "soundmanager2": {
       "main": "script/soundmanager2.js"
+    },
+    "anijs": {
+      "main": [
+        "dist/anijs.js",
+        "dist/helpers/dom/anijs-helper-dom.js"
+      ]
     }
   }
 }
