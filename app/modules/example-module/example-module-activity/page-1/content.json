@@ -19,7 +19,11 @@
         "blocks": [
           {
             "type": "text",
-            "description": "page 1 is empty!"
+            "items": [
+              {
+                description": "page 1 is empty!"
+              }
+            ]
           },
           {
             "type": "audio",
