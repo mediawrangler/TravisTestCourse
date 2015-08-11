@@ -3,7 +3,7 @@
   "name": "Transit",
   "version": "2.0.0",
   "dependencies": {
-    "everfi-sdk": "git@github.com:EverFi/ContentPartnerAPI.git#sdk-next",
+    "everfi-sdk": "git@github.com:EverFi/ContentPartnerAPI.git",
     "commonjs-require": "~1.4.5"
   },
   "overrides": {
