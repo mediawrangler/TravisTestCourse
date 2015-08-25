@@ -1,6 +1,8 @@
 {
   "course": {
     "title": "Transit",
+    "header": "",
+    "home": "Main Menu",
     "showNarration": "Show",
     "hideNarration": "Hide",
     "narrationCaption": "Narration",
@@ -13,16 +15,41 @@
     "muteOff": "Off",
     "mute": "Mute",
     "okButton": "OK",
+    "portfolioButton":"Portfolio",
+    "portfolioButtonOpen": "Close Portfolio",
     "backButton": "Back",
     "forwardPopover": "Page is done, time to go to the next one!",
     "forwardButton": "Next Page",
-    "portfolioButton": "Action Plan",
     "surveyRedirectLocal": "If you weren't local you'd be redirected to survey",
+    "assessmentRedirect": "You are being directed to an assessment.",
     "clickToProceed": "Click Here to Proceed",
     "surveyAlreadyCompleted": "You have already completed this survey",
-    "surveyRedirect": "You are being redirected to a survey",
-    "surveyRedirectText": "If you are not redirect in 5 seconds",
+    "surveyRedirect": "You are being directed to a survey",
+    "surveyRedirectText": "If you are not directed in 5 seconds",
     "surveyRedirectLinkText": "click here",
-    "srSkipText": "Press shift plus control plus {{accessibility.skipKey}} to continue to the next page when you are ready."
+    "srSkipText": "Press shift plus control plus {{accessibility.skipKey}} to continue to the next page when you are ready.",
+    "submit": "Submit",
+    "portfolioNoItemsStrengthsValues": "Your Values and Strengths will appear here after you've completed Module 1.",
+    "newWindow": "opens in new window.",
+    "playVideo": "Play Video",
+    "clickToSign": "Click to e-sign",
+    "defaultESigBody": "Click the link above before e-signing.",
+    "audioAccessibility": {
+      "playing": "Audio Playing, Select to Pause",
+      "paused": "Audio Paused, Select to Play",
+      "stopped": "Audio Stopped, Select to Play",
+      "completed": "Audio Complete, Select to Replay"
+    },
+    "videoAccessibility": {
+      "pause": "Select this button to pause the video",
+      "play": "Select this button to play the video",
+      "mute": "Select this to mute the video",
+      "unmute": "Select this to unmute the video",
+      "keyboardShortcutsButton": "Keyboard Shortcuts",
+      "keyboardShortcuts": "<p>Use Space or Enter to pause/play the video.</p><p>Use M to mute/unmute the video.</p><p>Use Up Arrow and Down Arrow to increase/decrease the volume.</p><p>Use C to show/hide the captions.</p>",
+      "keyboardShortcutsClose": "Close"
+    },
+    "closeButtonAriaText": "Close",
+    "frontAriaLabel": "Activate and navigate to the next element for more information. There will be a close button to close the next panel."
   }
 }
