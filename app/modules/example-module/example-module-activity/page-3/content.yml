@@ -1,3 +1,4 @@
-- type: text
-  items: 
-    - description: page 3 empty
+blocks:
+  - type: text
+    items:
+      - description: page 3 empty

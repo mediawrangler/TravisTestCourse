@@ -1,5 +1,5 @@
 {
-  "media_host": "https://everfi-curriculums.s3.amazonaws.com/curriculums",
+  "media_host": "https://everfi-curriculums.s3.amazonaws.com",
   "menu": {
     "homePage": "home",
     "groups": true,
@@ -15,6 +15,6 @@
     "skipKey": "s"
   },
   "production": {
-    "media_host": "https://d1vyejqi0lnyjd.cloudfront.net/curriculums"
+    "media_host": "https://d1vyejqi0lnyjd.cloudfront.net"
   }
 }
