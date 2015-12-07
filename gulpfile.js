@@ -11,5 +11,6 @@ require('EverFi-SDK-Build')(gulp, {
   DEVELOP_BUCKET: ['everfi-curriculums/curriculums/',
     require('./package').name,
     '/develop'
-  ].join('')
+  ].join(''),
+  content: 'json'
 });
