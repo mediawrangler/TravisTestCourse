@@ -8,6 +8,9 @@
       "modules": [ ]
     }
   },
+  "videoCompletionTime": 0,
+  "audioMinimum": 0,
+  "hideVideosDuringLoad": false,
   "supported_languages": [ "en" ],
   "surveys": [
   ],
@@ -16,5 +19,6 @@
   },
   "production": {
     "media_host": "https://d1vyejqi0lnyjd.cloudfront.net"
-  }
+  },
+  "cssTemplate": ""
 }
