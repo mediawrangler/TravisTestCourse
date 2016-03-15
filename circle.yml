@@ -1,11 +1,13 @@
 machine:
   node:
-    version: 0.10.33
+    version: 0.12.7
   pre:
     - sudo pip install awscli
 dependencies:
   post:
-    - gem install compass
+    - curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+    - sudo apt-get install git-lfs=1.1.0
+    - git lfs install
     - ./node_modules/bower/bin/bower cache clean everfi-sdk
     - ./node_modules/bower/bin/bower install
 deployment:
