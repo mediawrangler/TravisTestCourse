@@ -10,6 +10,7 @@
   },
   "videoCompletionTime": 0,
   "audioMinimum": 0,
+  "showCompatibilityWarning": false,
   "hideVideosDuringLoad": false,
   "supported_languages": [ "en" ],
   "surveys": [
