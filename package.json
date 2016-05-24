@@ -18,14 +18,14 @@
   },
   "devDependencies": {
     "accessibility-developer-tools": "^2.6.0",
-    "aws-sdk": "2.1.20",
+    "aws-sdk": "2.3.13",
     "bower": "^1.4.1",
     "chai": "*",
-    "karma": "^0.12.31",
+    "karma": "^0.13.22",
     "karma-chai": "^0.1.0",
-    "karma-chrome-launcher": "^0.1.10",
-    "karma-mocha": "^0.1.10",
-    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-mocha": "^1.0.1",
+    "karma-phantomjs-launcher": "^1.0.0",
     "karma-sinon": "^1.0.4",
     "mocha": "*"
   }
