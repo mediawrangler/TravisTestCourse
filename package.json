@@ -13,8 +13,9 @@
     "test": "gulp test"
   },
   "dependencies": {
-    "gulp": "^3.8.10",
-    "EverFi-SDK-Build": "git+ssh://git@github.com:EverFi/EverFi-SDK-Build.git"
+    "EverFi-SDK-Build": "git+ssh://git@github.com:EverFi/EverFi-SDK-Build.git",
+    "babel-preset-es2015": "^6.9.0",
+    "gulp": "^3.8.10"
   },
   "devDependencies": {
     "accessibility-developer-tools": "^2.6.0",
