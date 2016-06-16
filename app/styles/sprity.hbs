@@ -1,6 +1,7 @@
 {{#each layouts}}
   {{#each layout.items}}
-    ${{#if ../../opt.split}}{{cssesc ../../name}}-{{/if}}{{cssesc meta.name}}: -{{baseDim x}}px -{{baseDim y}}px {{baseDim width}}px {{baseDim height}}px;
+${{../sprites.[0].name}}-{{#if ../../opt.split}}
+{{cssesc ../../name}}-{{/if}}{{cssesc meta.name}}: -{{baseDim x}}px -{{baseDim y}}px {{baseDim width}}px {{baseDim height}}px;
   {{/each}}
 {{/each}}
 
@@ -39,30 +40,25 @@
   {{#each sprites}}
 
     {{#if dpi}}
-    @media (-webkit-min-device-pixel-ratio: {{ratio}}), (min-resolution: {{dpi}}dpi) {
+@media (-webkit-min-device-pixel-ratio: {{ratio}}), (min-resolution: {{dpi}}dpi) {
     {{/if}}
-    {{../../indicator}}{{cssesc ../classname}} {
-      background-image: url('{{escimage url}}');
-      {{#if dpi}}
-      background-size: {{baseWidth}}px {{baseHeight}}px;
-      {{/if}}
-    }
+.{{../../indicator}}{{cssesc ../classname}} {
+  background-image: url('{{escimage url}}');
+  {{#if dpi}}
+    background-size: {{baseWidth}}px {{baseHeight}}px;
+  {{/if}}
+  }
     {{#if dpi}}
-    }
     {{/if}}
-
-    @mixin {{cssesc ../classname}} {
-      {{#if dpi}}
-      @media (-webkit-min-device-pixel-ratio: {{ratio}}), (min-resolution: {{dpi}}dpi) {
-      {{/if}}
-        background-image: url('{{escimage url}}');
-        {{#if dpi}}
-        background-size: {{baseWidth}}px {{baseHeight}}px;
-      {{/if}}
-      {{#if dpi}}
-      }
-      {{/if}}
-    }
   {{/each}}
+}
 
+@mixin {{sprites.[0].name}}-img() {
+  {{#if sprites.[1].dpi}}
+  @media (-webkit-min-device-pixel-ratio: {{sprites.[1].ratio}}), (min-resolution: {{sprites.[1].dpi}}dpi) { 
+      background-size: {{sprites.[1].baseWidth}}px {{sprites.[1].baseHeight}}px;
+  }
+  {{/if}}
+  background-image: url('{{escimage sprites.[0].url}}');
+}
 {{/each}}

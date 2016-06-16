@@ -1,6 +1,6 @@
 {
   "author": "EverFi",
-  "name": "Transit",
+  "name": "skeletor",
   "version": "2.0.0",
   "dependencies": {
     "everfi-sdk": "https://s3.amazonaws.com/everfi-curriculums/sdk/Everfi-SDK-develop.zip",
