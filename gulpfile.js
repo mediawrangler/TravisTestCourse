@@ -12,5 +12,5 @@ require('EverFi-SDK-Build')(gulp, {
     require('./package').name,
     '/develop'
   ].join(''),
-  content: 'json'
+  content: 'yaml'
 });
