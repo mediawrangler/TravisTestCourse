@@ -1,0 +1,19 @@
+{
+  "maxdepth": 3,
+  "browser": true,
+  "curly": false,
+  "latedef": true,
+  "strict": false,
+  "newcap": true,
+  "nonew": true,
+  "jquery": true,
+  "esnext": true,
+  "globals": {
+    "Chaplin": true,
+    "Handlebars": true,
+    "EF": true,
+    "require": true,
+    "MODULE_JSON": true,
+    "module": true
+  }
+}
