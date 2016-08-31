@@ -38,7 +38,7 @@ describe("Transit", function(){
     });
 
     it("should be an instance of the application", function(){
-      app.should.be.instanceOf(Application);
+      app.should.be.instanceOf(Chaplin.Application);
     });
 
     it("should respond to start", function(){
