@@ -31,6 +31,12 @@
         "css"
       ]
     },
+    "knockback": {
+      "dependencies": {
+        "backbone": ">=0.5.1",
+        "knockout": ">=2.2.1"
+      }
+    },
     "bootstrap-accessibility-plugin": {
       "main": "plugins/js/bootstrap-accessibility-fn.js"
     },
