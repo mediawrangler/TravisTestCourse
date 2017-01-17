@@ -10,7 +10,8 @@
   },
   "scripts": {
     "start": "gulp",
-    "test": "gulp test"
+    "test": "gulp test",
+    "reinstall": "rm -r node_modules/ && rm -r bower_components/;npm cache clean && bower cache clean;npm link ../EverFi-SDK-Build && npm install && bower link everfi-sdk;"
   },
   "peerDependencies": {
     "phantomjs-prebuilt": "2.1.10"
