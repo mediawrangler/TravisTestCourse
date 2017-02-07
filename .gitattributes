@@ -1,2 +1,5 @@
 *.mov filter=lfs diff=lfs merge=lfs -text
 *.mp3 filter=lfs diff=lfs merge=lfs -text
+*.js eol=lf
+*.hbs eol=lf
+*.json eol=lf
