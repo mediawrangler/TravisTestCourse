@@ -3,6 +3,7 @@ machine:
     - sudo pip install awscli
 checkout:
   post:
+    - nvm install 6.9.1
     - nvm use && nvm alias default $(nvm current)
 dependencies:
   pre:
